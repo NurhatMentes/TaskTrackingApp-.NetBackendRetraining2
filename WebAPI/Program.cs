@@ -6,12 +6,25 @@ using Core.DependencyResolvers;
 using Core.Utilities.IaC;
 using Core.Extensions;
 using Microsoft.OpenApi.Models;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using Business.DependencyResolvers.Autofac;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+// Autofac Service Provider Factory
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+// Registering AutofacBusinessModule
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new AutofacBusinessModule());
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -80,6 +93,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.ConfigureCustomExceptionMiddleware();
 
 
 app.UseHttpsRedirection();

@@ -23,19 +23,32 @@ namespace Business.Concrete
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
             var user = new User
             {
                 Email = userForRegisterDto.Email,
                 FirstName = userForRegisterDto.FirstName,
                 LastName = userForRegisterDto.LastName,
-                CreatedAt = DateTime.UtcNow,    
+                CreatedAt = DateTime.UtcNow,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
             };
-            _userService.Add(user);
+
+            _userService.UserAdd(user);
+
+            var userForRegisterDtoResponse = new UserForRegisterDto
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                CreatedAt = user.CreatedAt
+            };
+
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
+
+
 
         public IDataResult<User> Login(UserForLoginDto userForLoginDto)
         {

@@ -1,12 +1,8 @@
 ﻿using Core.Entities.Concrete;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Task = Entities.Concrete.Task;
+
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -17,13 +13,13 @@ namespace DataAccess.Concrete.EntityFramework
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=TaskTrackingAppDB;Trusted_Connection=True");
         }
-        // DbSet Properties (Tables)
+ 
         public DbSet<User> Users { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
-        public DbSet<Entities.Concrete.Task> Tasks { get; set; }
+        public DbSet<Task> Tasks { get; set; }
         public DbSet<TaskComment> TaskComments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
@@ -60,8 +56,6 @@ namespace DataAccess.Concrete.EntityFramework
 
             base.OnModelCreating(modelBuilder);
         }
-
-
 
     }
 }

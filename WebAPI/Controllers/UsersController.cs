@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
            _userService = userService;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("get-all")]
         public IActionResult GetAll()
         {
             var result = _userService.GetAll();
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("GetById")]
+        [HttpGet("get-by-id")]
         public IActionResult Get(int userId)
         {
             var result = _userService.GetById(userId);
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("UserAdd")]
+        [HttpPost("user-add")]
         public IActionResult Post([FromBody] UserForRegisterDto userForRegisterDto)
         {
             var password = userForRegisterDto.Password;
@@ -53,15 +53,10 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("UserUpdate")]
-        public IActionResult Update([FromBody] User user, [FromQuery] string currentPassword)
+        [HttpPut("user-update")]
+        public IActionResult Update([FromBody] UserForUpdateDto userForUpdateDto, int userId)
         {
-            if (user == null || !ModelState.IsValid)
-            {
-                return BadRequest("Invalid user data.");
-            }
-
-            var result = _userService.Update(user, currentPassword);
+            var result = _userService.Update(userForUpdateDto, userId);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -70,6 +65,22 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpPut("update-password")]
+        public IActionResult UpdatePassword([FromBody] UpdatePasswordDto updatePasswordDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid data.");
+            }
+
+            var result = _userService.UpdatePassword(updatePasswordDto.UserId, updatePasswordDto.CurrentPassword, updatePasswordDto.NewPassword);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
 
     }
 }

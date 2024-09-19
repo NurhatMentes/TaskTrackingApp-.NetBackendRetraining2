@@ -61,6 +61,25 @@ namespace Core.Utilities.Security.JWT
 
             return claims;
         }
+
+        public int GetUserIdFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+            if (jwtToken == null)
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                throw new SecurityTokenException("User ID not found in token");
+            }
+
+            return int.Parse(userIdClaim.Value);
+        }
+
         public class TokenOptions
         {
             public string Audience { get; set; }

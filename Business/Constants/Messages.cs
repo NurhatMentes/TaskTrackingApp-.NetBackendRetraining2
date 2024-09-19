@@ -17,6 +17,7 @@ namespace Business.Constants
         public static string AccessTokenCreated = "Access token başarıyla oluşturuldu";
         public static string CheckIfUserIsAdmin = "Kullanıcı durumunu yalnızca Yöneticiler değiştirebilir";
         public static string InvalidOldPassword = "Güncel parola yanlış";
+        public static string PasswordUpdated = "Parolanız güncellendi";
 
         public static string AuthorizationDenied = "Yetkiniz yok";
 

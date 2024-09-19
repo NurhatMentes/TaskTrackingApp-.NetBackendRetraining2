@@ -12,6 +12,8 @@ using Business.BusinessAspects.Autofac;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Concrete.EntityFramework;
 using Core.Entities.DTOs;
+using Core.Utilities.Security.JWT;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -19,9 +21,14 @@ namespace Business.Concrete
     {
         private IUserDal _dal;
 
-        public UserManager(IUserDal dal)
+        private ITokenHelper _tokenHelper;
+        private IHttpContextAccessor _httpContextAccessor;
+
+        public UserManager(IUserDal dal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor)
         {
             _dal = dal;
+            _tokenHelper = tokenHelper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -71,38 +78,50 @@ namespace Business.Concrete
 
 
         [ValidationAspect(typeof(UserValidator))]
-        public IResult Update(User user, string currentPassword)
+        public IResult Update(UserForUpdateDto userForUpdateDto, int userId)
         {
-            var existingUser = _dal.Get(p => p.Id == user.Id);
+            var existingUser = _dal.Get(p => p.Id == userId);
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var currentUserId = _tokenHelper.GetUserIdFromToken(token);
+            var currentUser = _dal.Get(p => p.Id == currentUserId);
 
-      
-            var isAdminResult = CheckIfUserIsAdmin(user.Id);
-            var isOldPasswordValidResult = CheckIfOldPasswordIsValid(existingUser, currentPassword);
-
-            var result = BusinessRules.Run(isAdminResult, isOldPasswordValidResult);
+            var result = BusinessRules.Run(CheckIfUserExists(existingUser.Id), CheckIfUserCanChangeStatus(currentUser, userForUpdateDto));
 
             if (result != null)
             {
                 return result;
             }
 
-            if (!string.IsNullOrEmpty(user.NewPassword))
-            {
-                byte[] passwordHash, passwordSalt;
-                HashingHelper.CreatePasswordHash(user.NewPassword, out passwordHash, out passwordSalt);
-                existingUser.PasswordHash = passwordHash;
-                existingUser.PasswordSalt = passwordSalt;
-                user.NewPassword = null;
-            }
-
-            existingUser.FirstName = user.FirstName;
-            existingUser.LastName = user.LastName;
-            existingUser.Status = user.Status;
+            existingUser.FirstName = userForUpdateDto.FirstName;
+            existingUser.LastName = userForUpdateDto.LastName;
+            existingUser.Status = userForUpdateDto.Status;
             existingUser.UpdatedAt = DateTime.UtcNow;
 
             _dal.Update(existingUser);
             return new SuccessResult(Messages.UserUpdated);
         }
+
+        public IResult UpdatePassword(int userId, string currentPassword, string newPassword)
+        {
+            var existingUser = _dal.Get(p => p.Id == userId);
+
+            var result = BusinessRules.Run(CheckIfUserExists(userId), CheckIfOldPasswordIsValid(existingUser, currentPassword));
+
+            if (result != null)
+            {
+                return result;
+            }
+
+
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);
+            existingUser.PasswordHash = passwordHash;
+            existingUser.PasswordSalt = passwordSalt;
+
+            _dal.Update(existingUser);
+            return new SuccessResult(Messages.PasswordUpdated);
+        }
+
 
 
         [CacheAspect]
@@ -141,33 +160,39 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfUserIsAdmin(int userId)
+        private IResult CheckIfUserCanChangeStatus(User currentUser, UserForUpdateDto userForUpdateDto)
         {
-            var userClaims = _dal.GetClaims(new User { Id = userId });
+            var userClaims = _dal.GetClaims(currentUser);
             var isAdmin = userClaims.Any(c => c.OperationClaimName == "Admin");
 
-            if (!isAdmin)
+            if (!isAdmin && currentUser.Status != userForUpdateDto.Status)
             {
-                return new ErrorResult(Messages.CheckIfUserIsAdmin);
+                return new ErrorResult(Messages.CheckIfUserIsAdmin  );
             }
 
             return new SuccessResult();
         }
 
-        private IResult CheckIfOldPasswordIsValid(User user, string oldPassword)
+        private IResult CheckIfUserExists(int userId)
         {
-            if (user == null)
+            var existingUser = _dal.Get(p => p.Id == userId);
+            if (existingUser == null)
             {
                 return new ErrorResult(Messages.UserNotFound);
             }
+            return new SuccessResult();
+        }
 
-            bool isPasswordValid = HashingHelper.VerifyPasswordHash(oldPassword, user.PasswordHash, user.PasswordSalt);
-            if (!isPasswordValid)
+
+        private IResult CheckIfOldPasswordIsValid(User existingUser, string currentPassword)
+        {
+            if (!HashingHelper.VerifyPasswordHash(currentPassword, existingUser.PasswordHash, existingUser.PasswordSalt))
             {
                 return new ErrorResult(Messages.PasswordError);
             }
 
             return new SuccessResult();
         }
+
     }
 }

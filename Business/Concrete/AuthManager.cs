@@ -5,6 +5,7 @@ using Core.Entities.DTOs;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
+using DataAccess.Abstract;
 
 namespace Business.Concrete
 {
@@ -12,11 +13,16 @@ namespace Business.Concrete
     {
         private IUserService _userService;
         private ITokenHelper _tokenHelper;
+        private IOperationClaimDal _operationClaimDal;
+        private IUserOperationClaimDal _userOperationClaimDal;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper,
+                         IOperationClaimDal operationClaimDal, IUserOperationClaimDal userOperationClaimDal)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _operationClaimDal = operationClaimDal;
+            _userOperationClaimDal = userOperationClaimDal;
         }
 
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
@@ -32,10 +38,21 @@ namespace Business.Concrete
                 CreatedAt = DateTime.UtcNow,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Status = true
+                Status = false
             };
 
             _userService.UserAdd(user);
+
+            var memberRole = _operationClaimDal.Get(c => c.OperationClaimName == "Member");
+            if (memberRole != null)
+            {
+                var userOperationClaim = new UserOperationClaim
+                {
+                    UserId = user.Id,
+                    OperationClaimId = memberRole.Id
+                };
+                _userOperationClaimDal.Add(userOperationClaim);
+            }
 
             var userForRegisterDtoResponse = new UserForRegisterDto
             {

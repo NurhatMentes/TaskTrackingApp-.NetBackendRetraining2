@@ -31,7 +31,7 @@ namespace Business.Concrete
             _httpContextAccessor = httpContextAccessor;
         }
 
-
+        [ValidationAspect(typeof(UserValidator))]
         public IResult UserAdd(User user)
         {
             _dal.Add(user);
@@ -101,6 +101,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserUpdated);
         }
 
+        [ValidationAspect(typeof(UserValidator))]
         public IResult UpdatePassword(int userId, string currentPassword, string newPassword)
         {
             var existingUser = _dal.Get(p => p.Id == userId);

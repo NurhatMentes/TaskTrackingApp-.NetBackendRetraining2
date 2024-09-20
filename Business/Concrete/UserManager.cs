@@ -66,7 +66,6 @@ namespace Business.Concrete
 
             _userDal.Add(user);
 
-            // UserForRegisterDto nesnesini oluşturma
             var userForRegisterDtoResponse = new UserForRegisterDto
             {
                 Email = user.Email,

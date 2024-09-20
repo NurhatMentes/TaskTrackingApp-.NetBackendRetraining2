@@ -12,6 +12,7 @@ namespace Entities.Concrete
         public DateTime? EndDate { get; set; }
         public bool Status { get; set; }
         public int CreatedByUserId { get; set; }
+        public int? UpdatedByUserId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 

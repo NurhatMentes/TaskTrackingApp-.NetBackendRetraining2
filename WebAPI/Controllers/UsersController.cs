@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
 using Core.Entities.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,17 @@ namespace WebAPI.Controllers
         public IActionResult Get(int userId)
         {
             var result = _userService.GetById(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("get-user-detail")]
+        public IActionResult GetUserDetail(int userId)
+        {
+            var result = _userService.GetUserDetail(userId);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -80,6 +92,17 @@ namespace WebAPI.Controllers
             }
 
             return BadRequest(result);
+        }
+
+        [HttpPut("update-role")]
+        public IActionResult UpdateUserRole(int userId, int newRoleId)
+        {
+            var result = _userService.UpdateUserRole(userId, newRoleId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
         }
 
     }

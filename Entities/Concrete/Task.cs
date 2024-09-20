@@ -21,6 +21,4 @@ namespace Entities.Concrete
         public User? AssignedUser { get; set; }
         public ICollection<TaskComment>? TaskComments { get; set; }
     }
-
-
 }

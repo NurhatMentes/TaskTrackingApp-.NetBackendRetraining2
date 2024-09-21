@@ -24,21 +24,20 @@
         public static string ProjectUpdated = "Proje başarıyla güncellendi.";
         public static string ProjectNotFound = "Proje bulunamadı.";
         public static string ProjectStatusChanged = "Proje durumu başarıyla değiştirildi.";
-
         public static string ProjectNameNotEmpty = "Proje adı boş olamaz.";
         public static string ProjectNameMinLength = "Proje adı en az 3 karakter uzunluğunda olmalıdır.";
-
         public static string ProjectDescriptionMaxLength = "Proje açıklaması en fazla 1000 karakter uzunluğunda olabilir.";
-
         public static string ProjectStartDateNotEmpty = "Başlangıç tarihi boş olamaz.";
         public static string ProjectStartDateGreaterThanNow = "Başlangıç tarihi bugünden daha eski olamaz.";
-
         public static string ProjectEndDateGreaterThanStartDate = "Bitiş tarihi, başlangıç tarihinden sonra olmalıdır.";
-
         public static string ProjectStatusNotEmpty = "Proje durumu boş olamaz.";
         public static string ProjectStatusInvalid = "Geçerli bir durum seçmelisiniz.";
-
         public static string CreatedByUserIdNotEmpty = "Proje oluşturan kullanıcı ID'si boş olamaz.";
+
+        //ProjectUser
+        public static string ProjectUserNotFound = "Proje kullanıcısı bulunamadı.";
+        public static string ProjectUserAdded = "Proje kullanıcısı başarıyla eklendi.";
+        public static string ProjectUserUpdated = "Proje kullanıcısı başarıyla güncellendi.";
 
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace Entities.DTOs
+﻿using Core.Entities;
+
+namespace Entities.DTOs
 {
-    public class ProjectUpdateDto
+    public class ProjectUpdateDto : IDTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -28,7 +28,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(ProjectUserValidator))]
         public IResult Add(ProjectUserAddDto projectUserAddDto)
         {
             var projectUser = new ProjectUser
@@ -43,7 +43,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(ProjectUserValidator))]
         public IResult Update(ProjectUserUpdateDto dto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");

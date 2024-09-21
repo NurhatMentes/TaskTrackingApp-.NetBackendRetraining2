@@ -74,9 +74,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(ProjectUser projectUser)
+        public IActionResult Update(ProjectUserUpdateDto dto)
         {
-            var result = _projectUserService.Update(projectUser);
+            var result = _projectUserService.Update(dto);
             if (result.IsSuccess)
             {
                 return Ok(Messages.ProjectUserUpdated);

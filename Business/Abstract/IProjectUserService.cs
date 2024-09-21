@@ -1,5 +1,4 @@
 ﻿using Core.Utilities.Results;
-using Entities.Concrete;
 using Entities.DTOs;
 
 namespace Business.Abstract
@@ -16,7 +15,7 @@ namespace Business.Abstract
 
         IResult Add(ProjectUserAddDto projectUserAddDto);
 
-        IResult Update(ProjectUser projectUser);
+        IResult Update(ProjectUserUpdateDto projectUserUpdateDto);
 
     }
 }

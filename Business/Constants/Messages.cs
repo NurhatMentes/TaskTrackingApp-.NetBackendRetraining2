@@ -45,5 +45,17 @@
         public static string RoleCannotBeEmpty = "Rol boş olamaz.";
         public static string RoleLengthMustBeBetween1And100 = "Rol uzunluğu 1 ile 100 karakter arasında olmalıdır.";
 
+        //Task
+        public static string TaskAdded = "Görev başarıyla eklendi.";
+        public static string TaskUpdated = "Görev başarıyla güncellendi.";
+        public static string TaskDeleted = "Görev başarıyla silindi.";
+        public static string TaskListed = "Görevler başarıyla listelendi.";
+        public static string TaskNotFound = "Görev bulunamadı.";
+        public static string TaskNameRequired = "Görev adı zorunludur.";
+        public static string TaskDescriptionMaxLength = "Görev açıklaması en fazla 500 karakter olabilir.";
+        public static string TaskEndDateRequired = "Görev bitiş tarihi zorunludur.";
+        public static string TaskEndDateInFuture = "Görev bitiş tarihi gelecekte bir tarih olmalıdır.";
+        public static string TaskStatusRequired = "Görev durumu zorunludur.";
+        public static string TaskPriorityInvalid = "Görev önceliği geçersiz. 'Düşük', 'Orta' veya 'Yüksek' seçilmelidir.";
     }
 }

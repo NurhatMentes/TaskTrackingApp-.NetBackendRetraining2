@@ -18,7 +18,8 @@ namespace Core.Entities.DTOs
         public DateTime? ProjectEndDate { get; set; } 
         public string? TaskName { get; set; } 
         public string? AssignedBy { get; set; }
-        public DateTime? TaskDate { get; set; }
+        public DateTime? TaskStartDate { get; set; }
+        public DateTime? TaskEndDate { get; set; }
     }
 
 }

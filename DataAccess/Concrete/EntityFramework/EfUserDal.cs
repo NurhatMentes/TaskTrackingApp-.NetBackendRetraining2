@@ -48,8 +48,9 @@ namespace DataAccess.Concrete.EntityFramework
                                  ProjectStartDate = proj.StartDate,
                                  ProjectEndDate = proj.EndDate,
                                  TaskName = t.Name,
-                                 AssignedBy = t.AssignedUser != null ? t.AssignedUser.FirstName + " " + t.AssignedUser.LastName : null,
-                                 TaskDate = t.DueDate
+                                 AssignedBy = t.AssignedUserId != null ? t.AssignedUser.FirstName + " " + t.AssignedUser.LastName : null,
+                                 TaskStartDate = t.CreatedAt,
+                                 TaskEndDate = t.EndDate
                              };
                 return result.FirstOrDefault();
             }

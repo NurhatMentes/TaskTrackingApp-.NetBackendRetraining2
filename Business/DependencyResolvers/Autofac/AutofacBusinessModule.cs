@@ -26,7 +26,10 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<ProjectManager>().As<IProjectService>();
             builder.RegisterType<EfProjectDal>().As<IProjectDal>();
 
-            //builder.RegisterType<ProjectUserManager>().As<IProjectUserService>();
+            builder.RegisterType<TaskManager>().As<ITaskService>();
+            builder.RegisterType<EfTaskDal>().As<ITaskDal>();
+
+            builder.RegisterType<ProjectUserManager>().As<IProjectUserService>();
             builder.RegisterType<EfProjectUserDal>().As<IProjectUserDal>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

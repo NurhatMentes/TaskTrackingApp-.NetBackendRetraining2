@@ -20,7 +20,6 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Task> Tasks { get; set; }
-        public DbSet<TaskComment> TaskComments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
 
@@ -41,18 +40,21 @@ namespace DataAccess.Concrete.EntityFramework
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            modelBuilder.Entity<TaskComment>()
-                .HasOne(tc => tc.CommentedByUser)
-                .WithMany()
-                .HasForeignKey(tc => tc.CommentedByUserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.User)
                 .WithMany()
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+             .HasMany<Message>()
+             .WithOne(m => m.User)
+              .HasForeignKey("UserId");
+    
+            modelBuilder.Entity<User>()
+                .HasMany<ChatRoomUser>()
+                .WithOne(cru => cru.User)
+                .HasForeignKey("UserId");
 
             base.OnModelCreating(modelBuilder);
         }

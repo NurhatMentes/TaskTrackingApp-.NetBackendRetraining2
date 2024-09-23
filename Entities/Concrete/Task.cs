@@ -21,7 +21,6 @@ namespace Entities.Concrete
         
         public Project? Project { get; set; }
         public User? AssignedUser { get; set; }
-        public ICollection<TaskComment>? TaskComments { get; set; }
     }
     public enum PriorityLevel
     {

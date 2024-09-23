@@ -4,7 +4,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfNotificationDal : EfEntityRepositoryBase<Notification,TaskTrackingAppDBContext>,INotificationDal
+    public class EfMessageDal : EfEntityRepositoryBase<Message, TaskTrackingAppDBContext>, IMessageDal
     {
     }
 }

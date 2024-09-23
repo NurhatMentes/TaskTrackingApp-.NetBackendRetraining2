@@ -83,7 +83,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<TaskDto>> GetAll()
         {
             var tasks = _taskDal.GetAll();
@@ -95,7 +95,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<TaskDto>> GetAllByProjectId(int projectId)
         {
             var tasks = _taskDal.GetAllByProjectId(projectId);
@@ -107,7 +107,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<TaskDto>> GetAllByAssignedUserId(int assignedUserId)
         {
             var tasks = _taskDal.GetAllByAssignedUserId(assignedUserId);
@@ -119,7 +119,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<TaskDto> GetById(int taskId)
         {
             var task = _taskDal.GetById(taskId);

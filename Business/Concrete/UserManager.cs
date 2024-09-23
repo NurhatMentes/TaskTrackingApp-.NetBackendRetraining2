@@ -149,26 +149,32 @@ namespace Business.Concrete
 
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<User>> GetAll()
         {
             return new SuccessDataResult<List<User>>(_userDal.GetAll());
         }
 
+        [PerformanceAspect(1)]
         public IDataResult<User> GetById(int userId)
         {
             return new SuccessDataResult<User>(_userDal.Get(p => p.Id == userId));
         }
 
+        [CacheAspect]
+        [PerformanceAspect(1)]
         public IDataResult<User> GetByMail(string email)
         {
             return new SuccessDataResult<User>(_userDal.Get(p=>p.Email==email));
         }
 
+        [PerformanceAspect(1)]
         public IDataResult<List<OperationClaim>> GetClaims(User user)
         {
             return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));          
         }
+
+        [PerformanceAspect(1)]
         public IDataResult<UserDetailDto> GetUserDetail(int userId)
         {
             return new SuccessDataResult<UserDetailDto>(_userDal.GetUserDetails(userId));

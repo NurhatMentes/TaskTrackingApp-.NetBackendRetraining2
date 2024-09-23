@@ -29,7 +29,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<ProjectWithUserDto>> GetAll()
         {
             var projectsWithUsers = _projectDal.GetAllWithUsers();

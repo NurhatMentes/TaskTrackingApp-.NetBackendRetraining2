@@ -66,7 +66,7 @@
         public static string ChatRoomNameRequired = "Sohbet odası adı gereklidir.";
         public static string ChatRoomNameTooLong = "Sohbet odası adı en fazla 100 karakter olmalıdır.";
 
-        // ChatRoomUser
+        //ChatRoomUser
         public static string ChatRoomUserAdded = "Kullanıcı sohbet odasına eklendi.";
         public static string ChatRoomUserDeleted = "Kullanıcı sohbet odasından silindi.";
         public static string ChatRoomUserNotFound = "Kullanıcı sohbet odasında bulunamadı.";
@@ -76,7 +76,7 @@
         public static string InvalidUserId = "Geçersiz kullanıcı ID'si.";
         public static string InvalidChatRoomId = "Geçersiz sohbet odası ID'si.";
 
-        // Message
+        //Message
         public static string MessageAdded = "Mesaj gönderildi.";
         public static string MessageUpdated = "Mesaj güncellendi.";
         public static string MessageDeleted = "Mesaj silindi.";
@@ -89,5 +89,12 @@
         public static string MessageContentLength = "Mesaj içeriği 1 ile 1000 karakter arasında olmalıdır.";
         public static string InvalidChatRoom = "Geçersiz sohbet odası.";
         public static string InvalidUser = "Geçersiz kullanıcı.";
+
+        //Notification
+        public const string NotificationAdded = "Bildirim gönderildi.";
+        public const string NotificationUpdated = "Bildirim okundu.";
+        public const string NotificationDeleted = "Bildirim silindi.";
+        public const string NotificationNotFound = "Bildirim bulunamadı.";
+        public const string NotificationsFetched = "Bildirimler getirildi.";
     }
 }

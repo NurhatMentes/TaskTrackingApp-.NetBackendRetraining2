@@ -41,6 +41,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<MessageManager>().As<IMessageService>();
             builder.RegisterType<EfMessageDal>().As<IMessageDal>();
 
+            builder.RegisterType<NotificationManager>().As<INotificationService>();
+            builder.RegisterType<EfNotificationDal>().As<INotificationDal>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

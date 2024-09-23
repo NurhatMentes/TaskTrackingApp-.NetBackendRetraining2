@@ -91,7 +91,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<MessageDto> GetById(int id)
         {
             var result = _messageDal.GetMessagesByChatRoomId(id).Data.FirstOrDefault();
@@ -104,7 +104,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<MessageDto>> GetAll()
         {
             var result = _messageDal.GetAllMessages().Data;
@@ -112,7 +112,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]
+        [PerformanceAspect(1)]
         public IDataResult<List<MessageDto>> GetMessagesByChatRoomId(int chatRoomId)
         {
             var result = _messageDal.GetMessagesByChatRoomId(chatRoomId).Data;

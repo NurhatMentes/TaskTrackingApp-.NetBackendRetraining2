@@ -32,12 +32,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<ProjectUserManager>().As<IProjectUserService>();
             builder.RegisterType<EfProjectUserDal>().As<IProjectUserDal>();
 
-            builder.RegisterType<ChatRoomManager>().As<IChatRoomService>();
-            builder.RegisterType<EfChatRoomDal>().As<IChatRoomDal>();
-
-            builder.RegisterType<ChatRoomUserManager>().As<IChatRoomUserService>();
-            builder.RegisterType<EfChatRoomUserDal>().As<IChatRoomUserDal>();
-
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

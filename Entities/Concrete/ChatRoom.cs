@@ -7,7 +7,6 @@ namespace Entities.Concrete
         public int Id { get; set; }
         public string Name { get; set; } 
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
         public ICollection<ChatRoomUser> ChatRoomUsers { get; set; } 
         public ICollection<Message> Messages { get; set; } 
     }

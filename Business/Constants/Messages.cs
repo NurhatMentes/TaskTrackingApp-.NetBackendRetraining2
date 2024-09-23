@@ -77,12 +77,17 @@
         public static string InvalidChatRoomId = "Geçersiz sohbet odası ID'si.";
 
         // Message
-        public static string MessageAdded = "Mesaj eklendi.";
+        public static string MessageAdded = "Mesaj gönderildi.";
         public static string MessageUpdated = "Mesaj güncellendi.";
         public static string MessageDeleted = "Mesaj silindi.";
         public static string MessageNotFound = "Mesaj bulunamadı.";
         public static string MessageNotFoundUser = "Mesajınız bulunamadı.";
         public static string MessagesNotFoundInChatRoom = "Sohbet de mesaj bulunamadı.";
         public static string MessageUpdateNotAllowed = "Mesaj sadece 5 dakika içinde güncellenebilir.";
+        public static string MessageUpdateNotFound = "Güncellenmek istenen mesaj bulunamadı.";
+        public static string MessageContentCannotBeEmpty = "Mesaj içeriği boş olamaz.";
+        public static string MessageContentLength = "Mesaj içeriği 1 ile 1000 karakter arasında olmalıdır.";
+        public static string InvalidChatRoom = "Geçersiz sohbet odası.";
+        public static string InvalidUser = "Geçersiz kullanıcı.";
     }
 }

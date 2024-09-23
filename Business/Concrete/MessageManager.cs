@@ -1,5 +1,10 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -21,6 +26,8 @@ namespace Business.Concrete
             _userService = userService; 
         }
 
+        [SecuredOperation("Admin,Project Manager,Member")]
+        [ValidationAspect(typeof(MessageValidator))]
         public IResult Add(MessageAddDto messageAddDto)
         {
             var result = BusinessRules.Run(
@@ -45,12 +52,14 @@ namespace Business.Concrete
             return new SuccessResult(Messages.MessageAdded);
         }
 
+        [SecuredOperation("Admin,Project Manager,Member")]
+        [ValidationAspect(typeof(MessageValidator))]
         public IResult Update(MessageUpdateDto messageUpdateDto)
         {
             var message = _messageDal.Get(m => m.Id == messageUpdateDto.Id);
             if (message == null)
             {
-                return new ErrorResult(Messages.MessageNotFound);
+                return new ErrorResult(Messages.MessageUpdateNotFound);
             }
 
             var result = BusinessRules.Run(CheckIfMessageCanBeUpdated(message));
@@ -67,6 +76,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.MessageUpdated);
         }
 
+        [SecuredOperation("Admin,Project Manager,Member")]
+        [ValidationAspect(typeof(MessageValidator))]
         public IResult Delete(int id)
         {
             var messageToDelete = _messageDal.Get(m => m.Id == id);
@@ -79,23 +90,29 @@ namespace Business.Concrete
             return new SuccessResult(Messages.MessageDeleted);
         }
 
+        [CacheAspect]
+        [PerformanceAspect(5)]
         public IDataResult<MessageDto> GetById(int id)
         {
             var result = _messageDal.GetMessagesByChatRoomId(id).Data.FirstOrDefault();
             if (result == null)
             {
-                return new ErrorDataResult<MessageDto>(Messages.MessageNotFoundUser);
+                return new ErrorDataResult<MessageDto>(Messages.MessageNotFound);
             }
 
             return new SuccessDataResult<MessageDto>(result);
         }
 
+        [CacheAspect]
+        [PerformanceAspect(5)]
         public IDataResult<List<MessageDto>> GetAll()
         {
             var result = _messageDal.GetAllMessages().Data;
             return new SuccessDataResult<List<MessageDto>>(result);
         }
 
+        [CacheAspect]
+        [PerformanceAspect(5)]
         public IDataResult<List<MessageDto>> GetMessagesByChatRoomId(int chatRoomId)
         {
             var result = _messageDal.GetMessagesByChatRoomId(chatRoomId).Data;

@@ -3,21 +3,21 @@
     public static class Messages
     {
         //Auth
-        public static string UserNotFound = "Kullanıcı bulunamadı";
-        public static string PasswordError = "Şifre hatalı";
-        public static string SuccessfulLogin = "Sisteme giriş başarılı";
-        public static string AccessTokenCreated = "Access token başarıyla oluşturuldu";
+        public static string UserNotFound = "Kullanıcı bulunamadı.";
+        public static string PasswordError = "Şifre hatalı.";
+        public static string SuccessfulLogin = "Sisteme giriş başarılı.";
+        public static string AccessTokenCreated = "Access token başarıyla oluşturuldu.";
 
         //User
-        public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut";
-        public static string UserRegistered = "Kullanıcı başarıyla kaydedildi";
-        public static string UserUpdated = "Kullanıcı başarıyla güncellendi";
+        public static string UserAlreadyExists = "Bu kullanıcı zaten mevcu.t";
+        public static string UserRegistered = "Kullanıcı başarıyla kaydedildi.";
+        public static string UserUpdated = "Kullanıcı başarıyla güncellendi.";
         public static string UserRoleUpdated = "Kullanıcı rolü başarıyla güncellendi.";
         public static string UserRoleNotFound = "Kullanıcı rolü evcut değil.";
-        public static string InvalidOldPassword = "Güncel parola yanlış";
-        public static string PasswordUpdated = "Parolanız güncellendi";
-        public static string CheckIfUserIsAdmin = "Kullanıcı durumunu yalnızca Yöneticiler değiştirebilir";
-        public static string AuthorizationDenied = "Yetkiniz yok";
+        public static string InvalidOldPassword = "Güncel parola yanlış.";
+        public static string PasswordUpdated = "Parolanız güncellendi.";
+        public static string CheckIfUserIsAdmin = "Kullanıcı durumunu yalnızca Yöneticiler değiştirebilir.";
+        public static string AuthorizationDenied = "Yetkiniz yok.";
 
         //Project
         public static string ProjectAdded = "Proje başarıyla eklendi.";
@@ -57,5 +57,29 @@
         public static string TaskEndDateInFuture = "Görev bitiş tarihi gelecekte bir tarih olmalıdır.";
         public static string TaskStatusRequired = "Görev durumu zorunludur.";
         public static string TaskPriorityInvalid = "Görev önceliği geçersiz. 'Düşük', 'Orta' veya 'Yüksek' seçilmelidir.";
+
+        //ChatRoom
+        public static string ChatRoomCreated = "Sohbet odası oluşturuldu.";
+        public static string ChatRoomUpdated = "Sohbet odası güncellendi.";
+        public static string ChatRoomDeleted = "Sohbet odası silindi.";
+        public static string ChatRoomNotFound = "Sohbet odası bulunamadı.";
+        public static string ChatRoomNameRequired = "Sohbet odası adı gereklidir.";
+        public static string ChatRoomNameTooLong = "Sohbet odası adı en fazla 100 karakter olmalıdır.";
+
+        // ChatRoomUser
+        public static string ChatRoomUserAdded = "Kullanıcı sohbet odasına eklendi.";
+        public static string ChatRoomUserDeleted = "Kullanıcı sohbet odasından silindi.";
+        public static string ChatRoomUserNotFound = "Kullanıcı sohbet odasında bulunamadı.";
+        public static string ChatRoomUserFound = "Kullanıcı sohbet odasında bulundu.";
+        public static string ChatRoomUsersListed = "Sohbet odası kullanıcıları listelendi.";
+        public static string ChatRoomUserAlreadyExists = "Bu kullanıcı zaten sohbet odasına kayıtlı.";
+        public static string InvalidUserId = "Geçersiz kullanıcı ID'si.";
+        public static string InvalidChatRoomId = "Geçersiz sohbet odası ID'si.";
+
+        // Message
+        public static string MessageSent = "Mesaj gönderildi.";
+        public static string MessageDeleted = "Mesaj silindi.";
+        public static string MessageNotFound = "Mesaj bulunamadı.";
+        public static string MessagesListed = "Mesajlar listelendi.";
     }
 }

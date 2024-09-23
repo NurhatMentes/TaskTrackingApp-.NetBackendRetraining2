@@ -21,6 +21,10 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+        public DbSet<ChatRoomUser> ChatRoomUsers { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

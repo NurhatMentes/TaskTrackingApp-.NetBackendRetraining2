@@ -5,6 +5,7 @@ namespace Entities.Concrete
 {
     public class ChatRoomUser : IEntity
     {
+        public int Id { get; set; }
         public int ChatRoomId { get; set; }
         public ChatRoom ChatRoom { get; set; }
 

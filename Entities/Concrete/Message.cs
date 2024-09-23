@@ -15,5 +15,4 @@ namespace Entities.Concrete
         public string Content { get; set; } 
         public DateTime SentAt { get; set; } 
     }
-
 }

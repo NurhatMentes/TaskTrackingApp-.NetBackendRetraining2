@@ -1,6 +1,8 @@
-﻿namespace Entities.DTOs
+﻿using Core.Entities;
+
+namespace Entities.DTOs
 {
-    public class ChatRoomUserDto
+    public class ChatRoomUserDto : IDTOs
     {
         public string ChatRoomName { get; set; }
         public string UserName { get; set; }

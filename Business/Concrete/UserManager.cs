@@ -175,8 +175,6 @@ namespace Business.Concrete
         }
 
 
-
-
         //**************Business Rules**************
         private IResult CheckIfUserEmailAlreadyExists(string email)
         {

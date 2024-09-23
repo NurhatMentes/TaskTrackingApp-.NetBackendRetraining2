@@ -38,6 +38,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<ChatRoomUserManager>().As<IChatRoomUserService>();
             builder.RegisterType<EfChatRoomUserDal>().As<IChatRoomUserDal>();
 
+            builder.RegisterType<MessageManager>().As<IMessageService>();
+            builder.RegisterType<EfMessageDal>().As<IMessageDal>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

@@ -1,51 +1,134 @@
-# Task Tracking Application
+## Proje Yönetimi ve Görev Takip Sistemi (Task Tracking App)
+
+Yazılıma ara verdikten bir yıl sonra, öğrendiklerimi hatırlamak ve kendimi geliştirmek için kurumsal yazılım mimarisi üzerine hazırladım 3 aşamalı proje.  
+Bu proje, bir organizasyon içinde etkili proje yönetimi ve görev ataması yapmayı sağlamak amacıyla geliştirilmiş kapsamlı bir Proje Yönetimi ve Görev Takip Sistemidir. Takımların birden fazla projeyi, görevleri, kullanıcıları ve sohbet iletişimlerini oluşturup yönetmelerini sağlar. Sistem, modern teknolojiler ve mimari en iyi uygulamalar kullanılarak ölçeklenebilirlik ve performans göz önünde bulundurularak tasarlanmıştır.
+
+### İlgili Projeler
+
+Projenin UI ile ilgili kısmı.
+
+> Projenin UI kısmı tasarım aşamasındadır
 
 
-This project is a task tracking application developed to ensure effective management of tasks and projects. Users can manage projects, tasks, users, comments, and notifications. Project, .NET 8 and Entity Framework Core have been developed using and are equipped with a variety of modern technologies and techniques.
+---
 
-## Technologies and Techniques Used
+## Özellikler
 
-- **Autofac 8.1.0**: It is a library used for dependency injection.
-- **Entity Framework Core**: it is the ORM (Object-Relational Mapping) library used for eritaban operations.
-- **FluentValidation**: It is a library used for data validation.
-- **Aspect-Oriented Programming (AOP)**: It is an approach used to parse common operations in different parts of the code.
-- **Interceptors**: It is a technique used to change or add application behavior using AOP.
-- **MemoryCache**: Provides in-memory caching mechanism.
-- **Transaction Management**: Provides process management for database operations.
-- **Performance Aspects**: Apply various techniques on the application to improve performance.
-- **SOLID Prensipleri**: It consists of five basic principles used to ensure that software is flexible, sustainable and extensible.
+*   **Proje Yönetimi**: Ayrıntılı açıklamalar, zaman çizelgeleri ve durumlarla birden fazla proje oluşturma ve yönetme imkanı.
+*   **Görev Takibi**: Kullanıcılara görev atama, öncelik belirleme, ilerleme takibi ve son tarihleri yönetme.
+*   **Kullanıcı Yönetimi**: Güvenli kimlik doğrulama ve yetkilendirme mekanizmaları ile rol tabanlı erişim kontrolü.
+*   **Sohbet Sistemi**: Proje iletişimi için gerçek zamanlı sohbet odaları, mesaj takibi ve kullanıcıya özgü bildirimler.
+*   **Bildirimler**: Görev güncellemeleri, yeni mesajlar ve proje değişiklikleri için bildirimler alma.
+*   **Denetim Kaydı**: Sistem içinde gerçekleştirilen değişiklikleri ve eylemleri izleme.
+*   **Performans Optimizasyonu**: Yüksek performansı sağlamak için önbellekleme ve optimize edilmiş veri erişim stratejileri.
 
-## Features
+ 
+##  Kullanılan Teknolojiler
 
-The project aims to add the following features step by step:
+*   **.NET 8**: Uygulamanın backend'i, yüksek performanslı uygulamalar oluşturmak için .NET 8 kullanılarak inşa edilmiştir.
+*   **Entity Framework Core**: LINQ tabanlı sorgu yetenekleriyle veritabanı üzerindeki veri erişimini sağlayan soyutlama.
+*   **Autofac 8.1.0**: Uygulama genelinde bağımlılıkları verimli bir şekilde yönetmek ve enjekte etmek için kullanılan teknoloji.
+*   **FluentValidation**: Sisteme giren tüm verilerin tanımlanmış kurallara uymasını sağlamak için model doğrulama.
+*   **MemoryCache**: Sıkça erişilen verilerin bellekte saklanarak veritabanı yükünün azaltılması ve yanıt sürelerinin iyileştirilmesi.
+*   **Transaction Management**: Veri bütünlüğünü korumak için tüm işlemler başarıyla tamamlanmadan veritabanına işlenmesini engelleme.
+*   **Performans Aspects**: Kritik işlemlerin performansını izlemek ve optimize etmek için AOP (Aspect-Oriented Programming) kullanılarak uygulanan özel yönler.
+*   **Güvenlik**: Kimlik doğrulama için JWT kullanımı, veri güvenliği için şifreleme ve hashleme araçları.  
+       
+     
 
-1. **User Management**:
-   - Add, delete and update users.
-   - User authorization and authentication.
+## Mimari Genel Bakış
 
-2. **Project Management**:
-   - Create, edit and delete projects.
-   - Assigning users to a project.
+Proje, endişeleri ayırmak ve sürdürülebilirliği artırmak için çok katmanlı bir mimari ile organize edilmiştir:
 
-3. **Task Management**:
-   - Create, update and delete tasks.
-   - Assign tasks and update task status.
+### Ana Modüller
 
-4. **Comment Management**:
-   - Adding and updating comments to tasks.
-   - Users can see and manage comments.
+*   **Business**: Çekirdek iş mantığını içerir, soyut ve somut uygulamalar halinde organize edilmiştir.
+    *   **Aspects**: Oriented Programming bir uygulama içerisindeki authorization, logging, caching, exception handling, validation gibi cross-cutting concern sayılan işlevlerin ayrıştırılmasıyla modülariteyi arttırmayı hedefleyen bir yaklaşımdır.
+    *   **DependencyResolvers**: Autofac kullanarak bağımlılık enjeksiyonunu yapılandırır.
+    *   **ValidationRules**: FluentValidation kullanarak varlıklar için doğrulama kuralları.
+*   **Core**: Uygulama genelinde paylaşılan bağımsız bileşenler ve yardımcılar.
+    *   **CrossCuttingConcerns**: Önbellekleme ve doğrulama gibi çapraz kesen kaygıları uygular.
+    *   **Security**: Kimlik doğrulama ve yetkilendirme, JWT yönetimi ve veri şifreleme içerir.
+    *   **Utilities**: Sonuç yönetimi, iş kuralları ve diğer paylaşılan işlevler için genel yardımcılar.
+*   **DataAccess**: Repository pattern ve Entity Framework Core ile veri erişimini yönetir.
+*   **Entities**: Sistem genelinde kullanılan domain varlıkları ve veri transfer objelerini (DTO'lar) içerir.
+*   **WebAPI**: Sistemle etkileşim için RESTful endpoint'ler sağlar, frontend uygulamaları veya diğer servisler tarafından tüketilebilir.
+    
 
-5. **Notifications**:
-   - Send notifications to users about task updates and project changes.
+### Proje Yapısı
 
-6. **Reporting and Analysis**:
-   - Task and project status reports.
-   - Performance analysis and statistics.
+```plaintext
+├── Business
+│   ├── Abstract
+│   ├── Concrete
+│   ├── Aspects
+│   │   └── Autofac
+│   ├── DependencyResolvers
+│   │   └── Autofac
+│   ├── ValidationRules
+│       └── FluentValidation
+├── Core
+│   ├── Aspects
+│   │   └── Autofac
+│   ├── CrossCuttingConcerns
+│   │   ├── Caching
+│   │   └── Validation
+│   ├── Entities
+│   ├── Extensions
+│   └── Utilities
+│       ├── Business
+│       ├── IaC
+│       ├── Interceptors
+│       ├── Results
+│       ├── Security
+│       │   ├── Encryption
+│       │   ├── Hashing
+│       │   └── JWT
+│   ├── DataAccess
+│       ├── EntityFramework
+│   ├── DependencyResolvers
+├── DataAccess
+│   ├── Dependencies
+│   │   ├── Abstract
+│   │   └── Concrete
+│   ├── EntityFramework  
+├── Entities
+│   ├── Abstract
+│   ├── Concrete
+│   └── DTOs
+├── WebAPI
+```
 
-7. **Caching**:
-   - In-memory caching of frequently used data.
+---
 
-8. **Performance and Transaction Management**:
-   - Transaction management and performance optimizations for database operations.
+Nasıl Çalıştırılır?
 
+1.  Projeyi klonlayın:
+    
+    ```plaintext
+    git clone https://github.com/NurhatMentes/TaskTrackingApp-.NetBackendRetraining2.git
+    cd TaskTrackingApp-.NetBackendRetraining2.git
+    ```
+    
+2.  Gerekli bağımlılıkları yükleyin:
+    
+    ```plaintext
+    dotnet restore
+    ```
+    
+3.  Projeyi çalıştırın:
+    
+    ```plaintext
+    dotnet run
+    ```
+    
+    ---
+    
 
+## Katkıda Bulunanlar
+
+*   [Nurhat Menteş](https://github.com/NurhatMentes)
+
+## Lisans
+
+Bu proje MIT Lisansı ile lisanslanmıştır.

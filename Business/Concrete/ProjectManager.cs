@@ -28,7 +28,7 @@ namespace Business.Concrete
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [CacheAspect]
+        [CacheAspect(1)]
         [PerformanceAspect(1)]
         public IDataResult<List<ProjectWithUserDto>> GetAll()
         {

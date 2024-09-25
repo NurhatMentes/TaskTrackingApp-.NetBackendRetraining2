@@ -18,6 +18,8 @@ builder.Services.AddControllers();
 // Autofac Service Provider Factory
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
+builder.Services.AddCors();
+
 // Registering AutofacBusinessModule
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -95,7 +97,12 @@ if (app.Environment.IsDevelopment())
 
 app.ConfigureCustomExceptionMiddleware();
 
-app.UseCors(builder => builder.WithOrigins("http://localhost:4200/").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+app.UseRouting();
+app.UseCors(builder => builder
+    .WithOrigins("http://localhost:4200") 
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials());
 
 app.UseHttpsRedirection();
 

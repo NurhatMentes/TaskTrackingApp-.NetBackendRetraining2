@@ -8,6 +8,7 @@ Bu proje, bir organizasyon içinde etkili proje yönetimi ve görev ataması yap
 Projenin UI ile ilgili kısmı.
 
 > Projenin UI kısmı tasarım aşamasındadır
+> [Angular](https://github.com/NurhatMentes/task-tracking-app-ui)
 
 
 ---

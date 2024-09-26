@@ -16,11 +16,15 @@ namespace DataAccess.Concrete.EntityFramework
                 var projectUsers = from pu in context.ProjectUsers
                                    join p in context.Projects on pu.ProjectId equals p.Id
                                    join u in context.Users on pu.UserId equals u.Id
+                                   join updaterUser in context.Users on pu.UpdatedByUserId equals updaterUser.Id into updaterGroup
+                                   from updaterUser in updaterGroup.DefaultIfEmpty()
                                    select new ProjectUserDto
                                    {
                                        Id = pu.Id,
                                        ProjectId = pu.ProjectId,
                                        UserId = pu.UserId,
+                                       UpdatedByUserId = pu.UpdatedByUserId,
+                                       UpdatedByUserName = updaterUser.FirstName + " " + updaterUser.LastName,
                                        Role = pu.Role,
                                        ProjectName = p.Name, 
                                        UserName = u.FirstName + " " + u.LastName, 
@@ -38,12 +42,16 @@ namespace DataAccess.Concrete.EntityFramework
                 var projectUsers = (from pu in context.ProjectUsers
                                     join p in context.Projects on pu.ProjectId equals p.Id
                                     join u in context.Users on pu.UserId equals u.Id
+                                    join updaterUser in context.Users on pu.UpdatedByUserId equals updaterUser.Id into updaterGroup
+                                    from updaterUser in updaterGroup.DefaultIfEmpty()
                                     where pu.ProjectId == projectId
                                     select new ProjectUserDto
                                     {
                                         Id = pu.Id,
                                         ProjectId = pu.ProjectId,
                                         UserId = pu.UserId,
+                                        UpdatedByUserId = pu.UpdatedByUserId,
+                                        UpdatedByUserName = updaterUser.FirstName + " " + updaterUser.LastName,
                                         Role = pu.Role,
                                         ProjectName = p.Name,
                                         UserName = u.FirstName + " " + u.LastName,
@@ -66,12 +74,16 @@ namespace DataAccess.Concrete.EntityFramework
                 var projectUsers = from pu in context.ProjectUsers
                                    join p in context.Projects on pu.ProjectId equals p.Id
                                    join u in context.Users on pu.UserId equals u.Id
+                                   join updaterUser in context.Users on pu.UpdatedByUserId equals updaterUser.Id into updaterGroup
+                                   from updaterUser in updaterGroup.DefaultIfEmpty()
                                    where pu.UserId == userId
                                    select new ProjectUserDto
                                    {
                                        Id = pu.Id,
                                        ProjectId = pu.ProjectId,
                                        UserId = pu.UserId,
+                                       UpdatedByUserId = pu.UpdatedByUserId,
+                                       UpdatedByUserName = updaterUser.FirstName + " " + updaterUser.LastName,
                                        Role = pu.Role,
                                        ProjectName = p.Name,
                                        UserName = u.FirstName + " " + u.LastName,
@@ -89,12 +101,16 @@ namespace DataAccess.Concrete.EntityFramework
                 var projectUser = (from pu in context.ProjectUsers
                                    join p in context.Projects on pu.ProjectId equals p.Id
                                    join u in context.Users on pu.UserId equals u.Id
+                                   join updaterUser in context.Users on pu.UpdatedByUserId equals updaterUser.Id into updaterGroup
+                                   from updaterUser in updaterGroup.DefaultIfEmpty()
                                    where pu.Id == projectUserId
                                    select new ProjectUserDto
                                    {
                                        Id = pu.Id,
                                        ProjectId = pu.ProjectId,
                                        UserId = pu.UserId,
+                                       UpdatedByUserId = pu.UpdatedByUserId,
+                                       UpdatedByUserName = updaterUser.FirstName + " " + updaterUser.LastName,
                                        Role = pu.Role,
                                        ProjectName = p.Name,
                                        UserName = u.FirstName + " " + u.LastName,

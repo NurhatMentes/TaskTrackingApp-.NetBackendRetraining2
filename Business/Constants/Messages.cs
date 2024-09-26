@@ -33,6 +33,8 @@
         public static string ProjectStatusNotEmpty = "Proje durumu boş olamaz.";
         public static string ProjectStatusInvalid = "Geçerli bir durum seçmelisiniz.";
         public static string CreatedByUserIdNotEmpty = "Proje oluşturan kullanıcı ID'si boş olamaz.";
+        public static string StartDateCannotBeInThePast = "Proje başlangıç tarihi geçmiş olamaz.";
+        public static string EndDateCannotBeEarlierOrSameAsStartDate = "Proje bitiş tarihi, başlangıç tarihiyle aynı gün veya daha önceki bir gün olamaz.";
 
         //ProjectUser
         public static string ProjectUserNotFound = "Proje kullanıcısı bulunamadı.";

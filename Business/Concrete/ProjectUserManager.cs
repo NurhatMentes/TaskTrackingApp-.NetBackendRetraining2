@@ -14,8 +14,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
-    [SecuredOperation("Admin,Project Manager")]
-    [ValidationAspect(typeof(ProjectUserValidator))]
+
     public class ProjectUserManager : IProjectUserService
     {
         private IProjectUserDal _projectUserDal;
@@ -29,6 +28,8 @@ namespace Business.Concrete
             _httpContextAccessor = httpContextAccessor;
         }
 
+        [SecuredOperation("Admin,Project Manager")]
+        [ValidationAspect(typeof(ProjectUserValidator))]
         public IResult Add(ProjectUserAddDto projectUserAddDto)
         {
             var projectUser = new ProjectUser
@@ -42,6 +43,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ProjectUserAdded);
         }
 
+        [SecuredOperation("Admin,Project Manager")]
+        [ValidationAspect(typeof(ProjectUserValidator))]
         public IResult Update(ProjectUserUpdateDto dto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -82,7 +85,6 @@ namespace Business.Concrete
 
             return new SuccessDataResult<List<ProjectUserDto>>(project.Data);
         }
-
 
 
         public IDataResult<List<ProjectUserDto>> GetAllByUserId(int userId)

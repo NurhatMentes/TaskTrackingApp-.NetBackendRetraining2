@@ -5,6 +5,7 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
@@ -53,15 +54,25 @@ namespace Business.Concrete
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var createdByUserId = _tokenHelper.GetUserIdFromToken(token);
 
+            var result = BusinessRules.Run(
+                    CheckIfStartDateIsInThePast(projectAddDto.StartDate),
+                         CheckIfEndDateIsNotEarlierOrSameAsStartDate(projectAddDto.StartDate, projectAddDto.EndDate)
+                    );
+
+            if (result != null)
+            {
+                return result;
+            }
+
             var project = new Project
             {
                 Name = projectAddDto.ProjectName,
                 Description = projectAddDto.Description,
                 StartDate = projectAddDto.StartDate,
                 EndDate = projectAddDto.EndDate,
-                CreatedByUserId = createdByUserId, 
+                CreatedByUserId = createdByUserId,
                 CreatedAt = DateTime.UtcNow,
-                Status = true 
+                Status = projectAddDto.Status
             };
 
             _projectDal.Add(project);
@@ -81,6 +92,13 @@ namespace Business.Concrete
             if (existingProject == null)
             {
                 return new ErrorResult(Messages.ProjectNotFound);
+            }
+
+            var result = BusinessRules.Run(CheckIfEndDateIsNotEarlierOrSameAsStartDate(projectDto.StartDate, projectDto.EndDate));
+
+            if (result != null)
+            {
+                return result;
             }
 
             existingProject.Name = projectDto.Name;
@@ -110,6 +128,26 @@ namespace Business.Concrete
             existingProject.Status = status;
             _projectDal.Update(existingProject);
             return new SuccessResult(Messages.ProjectStatusChanged);
+        }
+
+
+        //************Busines Rules***********
+        private IResult CheckIfStartDateIsInThePast(DateTime startDate)
+        {
+            if (startDate < DateTime.Today)
+            {
+                return new ErrorResult(Messages.StartDateCannotBeInThePast);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfEndDateIsNotEarlierOrSameAsStartDate(DateTime startDate, DateTime endDate)
+        {
+            if (endDate <= startDate)
+            {
+                return new ErrorResult(Messages.EndDateCannotBeEarlierOrSameAsStartDate);
+            }
+            return new SuccessResult();
         }
     }
 }

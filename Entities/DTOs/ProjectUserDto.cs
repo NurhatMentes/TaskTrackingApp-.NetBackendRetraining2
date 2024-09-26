@@ -12,5 +12,6 @@ namespace Entities.DTOs
         public string UserName { get; set; } 
         public string UserEmail { get; set; }
         public int? UpdatedByUserId { get; set; }
+        public string? UpdatedByUserName { get; set; }
     }
 }

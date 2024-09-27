@@ -5,8 +5,11 @@ namespace Entities.DTOs
     public class ProjectUserUpdateDto : IDTOs
     {
         public int ProjectId { get; set; }
-        public int? UpdatedByUserId { get; set; }
         public int UserId { get; set; }
         public string? Role { get; set; }
+        public string? UpdatedByUserEmail { get; set; }
+        public string? UpdatedByUserName { get; set; }
+        public string? UserEmail { get; set; }
+        public string? UserName { get; set; }
     }
 }

@@ -37,9 +37,9 @@
         public static string EndDateCannotBeEarlierOrSameAsStartDate = "Proje bitiş tarihi, başlangıç tarihiyle aynı gün veya daha önceki bir gün olamaz.";
 
         //ProjectUser
-        public static string ProjectUserNotFound = "Proje kullanıcısı bulunamadı.";
-        public static string ProjectUserAdded = "Proje kullanıcısı başarıyla eklendi.";
-        public static string ProjectUserUpdated = "Proje kullanıcısı başarıyla güncellendi.";
+        public static string ProjectUserNotFound = "Proje de kullanıcı bulunamadı.";
+        public static string ProjectUserAdded = "Projeye kullanıcı  eklendi.";
+        public static string ProjectUserUpdated = "Proje kullanıcı atandı.";
         public static string ProjectIdCannotBeEmpty = "Proje Id'si boş olamaz.";
         public static string ProjectIdMustBeGreaterThanZero = "Proje ID'si sıfırdan büyük olmalıdır.";
         public static string UserIdCannotBeEmpty = "Kullanıcı Kimliği boş olamaz.";

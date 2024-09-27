@@ -11,5 +11,6 @@ namespace DataAccess.Abstract
         IDataResult<List<ProjectUserDto>> GetAllByUserId(int userId);
         IDataResult<List<ProjectUserDto>> GetAllByProjectId(int projectId);
         IDataResult<ProjectUserDto> GetById(int projectUserId);
+        IDataResult<List<ProjectUsersWithUsersDto>> GetAllProjectsWithUsers();
     }
 }

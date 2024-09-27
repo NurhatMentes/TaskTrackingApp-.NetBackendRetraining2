@@ -1,5 +1,6 @@
 ﻿using Core.Constants;
 using Core.DataAccess.EntityFramework;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -129,5 +130,35 @@ namespace DataAccess.Concrete.EntityFramework
                 return new ErrorDataResult<ProjectUserDto>("Proje kullanıcısı bulunamadı.");
             }
         }
+
+        public IDataResult<List<ProjectUsersWithUsersDto>> GetAllProjectsWithUsers()
+        {
+            using (var context = new TaskTrackingAppDBContext())
+            {
+                var result = (from pu in context.ProjectUsers
+                              join p in context.Projects on pu.ProjectId equals p.Id
+                              join u in context.Users on pu.UserId equals u.Id
+                              select new ProjectUsersWithUsersDto 
+                              {
+                                  ProjectId = p.Id,
+                                  ProjectName = p.Name,
+                                  UserId = u.Id,
+                                  UserName = u.FirstName + " " + u.LastName,
+                                  UserEmail = u.Email,
+                                  Role = pu.Role
+                              })
+                             .ToList(); 
+
+                if (result != null && result.Count > 0)
+                {
+                    return new SuccessDataResult<List<ProjectUsersWithUsersDto>>(result);
+                }
+
+                return new ErrorDataResult<List<ProjectUsersWithUsersDto>>("Proje ve kullanıcı verileri bulunamadı.");
+            }
+        }
+
+
+
     }
 }

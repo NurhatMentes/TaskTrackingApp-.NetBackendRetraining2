@@ -16,6 +16,7 @@ namespace Business.Abstract
         IResult Add(ProjectUserAddDto projectUserAddDto);
 
         IResult Update(ProjectUserUpdateDto projectUserUpdateDto);
+        IDataResult<List<ProjectUsersWithUsersDto>> GetAllProjectsWithUsers();
 
     }
 }

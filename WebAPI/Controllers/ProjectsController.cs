@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("project-add")]
+        [HttpPost("add")]
         public IActionResult Add([FromBody] ProjectAddDto projectAddDto)
         {
             var result = _projectService.Add(projectAddDto);
@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("project-update")]
+        [HttpPut("update")]
         public IActionResult Update([FromBody] ProjectUpdateDto projectDto)
         {
             var result = _projectService.Update(projectDto);

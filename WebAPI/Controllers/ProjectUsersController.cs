@@ -18,7 +18,19 @@ namespace WebAPI.Controllers
             _projectUserService = projectUserService;
         }
 
-        [HttpGet("getbyid")]
+        [HttpGet("projects-with-users")]
+        public IActionResult GetProjectsWithUsers()
+        {
+            var result = _projectUserService.GetAllProjectsWithUsers();
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+
+
+        [HttpGet("get-by-id")]
         public IActionResult GetById(int id)
         {
             var result = _projectUserService.GetById(id);
@@ -29,7 +41,7 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getallbyprojectid")]
+        [HttpGet("get-all-byproject-id")]
         public IActionResult GetAllByProjectId(int projectId)
         {
             var result = _projectUserService.GetAllByProjectId(projectId);
@@ -40,7 +52,7 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getallbyuserid")]
+        [HttpGet("get-all-by-userid")]
         public IActionResult GetAllByUserId(int userId)
         {
             var result = _projectUserService.GetAllByUserId(userId);

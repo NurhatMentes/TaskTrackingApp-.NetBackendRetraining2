@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
            _userService = userService;
         }
 
-        [HttpGet("get-all")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             var result = _userService.GetAll();
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("user-add")]
+        [HttpPost("add")]
         public IActionResult Post([FromBody] UserForRegisterDto userForRegisterDto)
         {
             var password = userForRegisterDto.Password;
@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("user-update")]
+        [HttpPut("update")]
         public IActionResult Update([FromBody] UserForUpdateDto userForUpdateDto, int userId)
         {
             var result = _userService.Update(userForUpdateDto, userId);
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("update-password")]
+        [HttpPut("password")]
         public IActionResult UpdatePassword([FromBody] UpdatePasswordDto updatePasswordDto)
         {
             if (!ModelState.IsValid)

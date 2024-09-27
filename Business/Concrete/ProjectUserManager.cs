@@ -47,25 +47,46 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProjectUserValidator))]
         public IResult Update(ProjectUserUpdateDto dto)
         {
-            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var updatedByUserId = _tokenHelper.GetUserIdFromToken(token);
+            //var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            //var updatedByUserId = _tokenHelper.GetUserIdFromToken(token);
 
-            var existingProjectUser = _projectUserDal.Get(pu => pu.Id == dto.ProjectId);
+            // Mevcut kullanıcıyı buluyoruz.
+            var existingProjectUser = _projectUserDal.Get(pu => pu.ProjectId == dto.ProjectId && pu.UserId == dto.UserId);
+
+
+            // Eğer mevcut kullanıcı bulunamazsa hata döndürüyoruz.
             if (existingProjectUser == null)
             {
                 return new ErrorResult(Messages.ProjectUserNotFound);
             }
 
-             existingProjectUser.ProjectId = dto.ProjectId;
-            existingProjectUser.UpdatedByUserId = updatedByUserId;
-            existingProjectUser.UserId = dto.UserId;
-            existingProjectUser.Role = dto.Role;
+            // Eğer kullanıcı değiştirilmek isteniyorsa:
+            if (dto.NewUserId.HasValue)
+            {
+                // Aynı projede bu yeni kullanıcı var mı diye kontrol edelim.
+                var newProjectUserCheck = _projectUserDal.Get(pu => pu.ProjectId == dto.ProjectId && pu.UserId == dto.NewUserId.Value);
 
+                if (newProjectUserCheck != null)
+                {
+                    return new ErrorResult("Bu kullanıcı zaten projeye atanmış durumda.");
+                }
+
+                // Mevcut kullanıcı yerine yeni kullanıcıyı atıyoruz.
+                existingProjectUser.UserId = dto.NewUserId.Value;
+            }
+
+            // Rolü güncelliyoruz.
+            existingProjectUser.Role = dto.Role;
+            existingProjectUser.UpdatedByUserId = 2;
+
+            // Veritabanında güncelleme yapıyoruz.
             _projectUserDal.Update(existingProjectUser);
+
             return new SuccessResult(Messages.ProjectUserUpdated);
         }
 
-        [CacheAspect]
+
+        //[CacheAspect(1)]
         [PerformanceAspect(1)]
         public IDataResult<List<ProjectUserDto>> GetAll()
         {
@@ -110,6 +131,20 @@ namespace Business.Concrete
             }
 
             return new SuccessDataResult<ProjectUserDto>(project);
+        }
+
+        public IDataResult<List<ProjectUsersWithUsersDto>> GetAllProjectsWithUsers()
+        {
+            // DAL'den verileri al
+            var result = _projectUserDal.GetAllProjectsWithUsers();
+
+            // Sonucu kontrol et ve geri döndür
+            if (result.IsSuccess)
+            {
+                return new SuccessDataResult<List<ProjectUsersWithUsersDto>>(result.Data);
+            }
+
+            return new ErrorDataResult<List<ProjectUsersWithUsersDto>>(result.Message);
         }
     }
 }

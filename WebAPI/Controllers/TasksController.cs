@@ -59,18 +59,18 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add(TaskAddDto taskAddDto)
         {
             var result = _taskService.Add(taskAddDto);
             if (result.IsSuccess)
             {
-                return Ok(result.Message);
+                return Ok(new { isSuccess = true, message = result.Message });
             }
-            return BadRequest(result.Message);
+            return BadRequest(new { isSuccess = false, message = result.Message });
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public IActionResult Update(TaskUpdateDto taskUpdateDto)
         {
             var result = _taskService.Update(taskUpdateDto);

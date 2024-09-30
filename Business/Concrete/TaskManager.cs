@@ -11,7 +11,6 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 using Task = Entities.Concrete.Task;
 
 namespace Business.Concrete
@@ -82,7 +81,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.TaskUpdated);
         }
 
-        [CacheAspect]
+       // [CacheAspect]
         [PerformanceAspect(1)]
         public IDataResult<List<TaskDto>> GetAll()
         {
@@ -94,7 +93,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<TaskDto>>(tasks.Data,Messages.TaskListed);
         }
 
-        [CacheAspect]
+        //[CacheAspect]
         [PerformanceAspect(1)]
         public IDataResult<List<TaskDto>> GetAllByProjectId(int projectId)
         {
@@ -106,7 +105,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<TaskDto>>(tasks.Data);
         }
 
-        [CacheAspect]
+        //[CacheAspect]
         [PerformanceAspect(1)]
         public IDataResult<List<TaskDto>> GetAllByAssignedUserId(int assignedUserId)
         {
@@ -118,7 +117,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<TaskDto>>(tasks.Data);
         }
 
-        [CacheAspect]
+       // [CacheAspect]
         [PerformanceAspect(1)]
         public IDataResult<TaskDto> GetById(int taskId)
         {

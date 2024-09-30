@@ -12,7 +12,7 @@ namespace Business.ValidationRules.FluentValidation
             .NotEmpty().WithMessage(Messages.TaskNameRequired);
 
             RuleFor(t => t.Description)
-                .MaximumLength(500).WithMessage(Messages.TaskDescriptionMaxLength);
+                .MaximumLength(1000).WithMessage(Messages.TaskDescriptionMaxLength);
 
             RuleFor(t => t.EndDate)
                 .NotEmpty().WithMessage(Messages.TaskEndDateRequired)

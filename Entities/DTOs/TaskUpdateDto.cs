@@ -12,8 +12,7 @@ namespace Entities.DTOs
         public string Name { get; set; }
         public string? Description { get; set; }
         public PriorityLevel Priority { get; set; }
-        public string? Status { get; set; }
+        public bool? Status { get; set; }
         public DateTime EndDate { get; set; }
-        public DateTime UpdatedAt { get; set; }
     }
 }

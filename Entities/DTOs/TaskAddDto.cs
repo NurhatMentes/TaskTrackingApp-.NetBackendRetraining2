@@ -12,8 +12,7 @@ namespace Entities.DTOs
         public int CreaterUserId { get; set; }
         public int? AssignedUserId { get; set; }
         public PriorityLevel Priority { get; set; }
-        public string? Status { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public bool? Status { get; set; }
         public DateTime EndDate { get; set; }
     }
 }

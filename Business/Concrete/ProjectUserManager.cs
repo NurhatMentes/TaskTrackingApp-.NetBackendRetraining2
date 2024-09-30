@@ -47,41 +47,39 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProjectUserValidator))]
         public IResult Update(ProjectUserUpdateDto dto)
         {
-            //var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            //var updatedByUserId = _tokenHelper.GetUserIdFromToken(token);
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var updatedByUserId = _tokenHelper.GetUserIdFromToken(token);
 
-            // Mevcut kullanıcıyı buluyoruz.
             var existingProjectUser = _projectUserDal.Get(pu => pu.ProjectId == dto.ProjectId && pu.UserId == dto.UserId);
 
 
-            // Eğer mevcut kullanıcı bulunamazsa hata döndürüyoruz.
             if (existingProjectUser == null)
             {
                 return new ErrorResult(Messages.ProjectUserNotFound);
             }
 
-            // Eğer kullanıcı değiştirilmek isteniyorsa:
             if (dto.NewUserId.HasValue)
             {
-                // Aynı projede bu yeni kullanıcı var mı diye kontrol edelim.
                 var newProjectUserCheck = _projectUserDal.Get(pu => pu.ProjectId == dto.ProjectId && pu.UserId == dto.NewUserId.Value);
 
-                if (newProjectUserCheck != null)
+                if (newProjectUserCheck != null && newProjectUserCheck.Role == dto.Role)
                 {
                     return new ErrorResult("Bu kullanıcı zaten projeye atanmış durumda.");
                 }
 
-                // Mevcut kullanıcı yerine yeni kullanıcıyı atıyoruz.
                 existingProjectUser.UserId = dto.NewUserId.Value;
             }
 
-            // Rolü güncelliyoruz.
             existingProjectUser.Role = dto.Role;
-            existingProjectUser.UpdatedByUserId = 2;
+            existingProjectUser.UpdatedByUserId = updatedByUserId;
 
-            // Veritabanında güncelleme yapıyoruz.
+
             _projectUserDal.Update(existingProjectUser);
 
+            if (existingProjectUser != null && existingProjectUser.Role != dto.Role)
+            {
+                return new SuccessResult(Messages.RoleUpdated);
+            }
             return new SuccessResult(Messages.ProjectUserUpdated);
         }
 

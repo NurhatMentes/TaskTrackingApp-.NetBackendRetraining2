@@ -91,9 +91,9 @@ namespace WebAPI.Controllers
             var result = _projectUserService.Update(dto);
             if (result.IsSuccess)
             {
-                return Ok(Messages.ProjectUserUpdated);
+                return Ok(new { Messages.ProjectUserUpdated });
             }
-            return BadRequest(result.Message);
+            return BadRequest(new { result.Message });
         }
     }
 }

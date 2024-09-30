@@ -39,12 +39,13 @@
         //ProjectUser
         public static string ProjectUserNotFound = "Proje de kullanıcı bulunamadı.";
         public static string ProjectUserAdded = "Projeye kullanıcı  eklendi.";
-        public static string ProjectUserUpdated = "Proje kullanıcı atandı.";
+        public static string ProjectUserUpdated = "Projeye kullanıcı atandı.";
         public static string ProjectIdCannotBeEmpty = "Proje Id'si boş olamaz.";
         public static string ProjectIdMustBeGreaterThanZero = "Proje ID'si sıfırdan büyük olmalıdır.";
         public static string UserIdCannotBeEmpty = "Kullanıcı Kimliği boş olamaz.";
         public static string UserIdMustBeGreaterThanZero = "Kullanıcı kimliği sıfırdan büyük olmalıdır.";
         public static string RoleCannotBeEmpty = "Rol boş olamaz.";
+        public static string RoleUpdated = "Kullanıcı rolü değiştirildi.";
         public static string RoleLengthMustBeBetween1And100 = "Rol uzunluğu 1 ile 100 karakter arasında olmalıdır.";
 
         //Task

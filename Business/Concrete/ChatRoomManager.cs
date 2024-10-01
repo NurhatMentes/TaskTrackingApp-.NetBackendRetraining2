@@ -2,38 +2,62 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
-using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
+using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
-    [SecuredOperation("Admin,Project Manager,Member")]
+    //[SecuredOperation("Admin,Project Manager,Member")]
     [ValidationAspect(typeof(ChatRoomValidator))]
     public class ChatRoomManager : IChatRoomService
     {
         private readonly IChatRoomDal _chatRoomDal;
+        private ITokenHelper _tokenHelper;
+        private IHttpContextAccessor _httpContextAccessor;
+        private IChatRoomUserDal _chatRoomUserDal;
 
-        public ChatRoomManager(IChatRoomDal chatRoomDal)
+        public ChatRoomManager(IChatRoomDal chatRoomDal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor, IChatRoomUserDal chatRoomUserDal)
         {
             _chatRoomDal = chatRoomDal;
+            _tokenHelper = tokenHelper;
+            _httpContextAccessor = httpContextAccessor;
+            _chatRoomUserDal = chatRoomUserDal;
         }
 
         public IResult Add(ChatRoomCreateDto chatRoomCreateDto)
         {
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var createdByUserId = _tokenHelper.GetUserIdFromToken(token);
+
             var chatRoom = new ChatRoom
             {
                 Name = chatRoomCreateDto.Name,
+                CreatedByUserId = createdByUserId,
                 CreatedAt = chatRoomCreateDto.CreatedAt
             };
 
             _chatRoomDal.Add(chatRoom);
+
+
+            foreach (var userId in chatRoomCreateDto.UserIds)
+            {
+                var chatRoomUser = new ChatRoomUser
+                {
+                    ChatRoomId = chatRoom.Id,
+                    UserId = userId     
+                };
+                _chatRoomUserDal.Add(chatRoomUser);  
+            }
+
             return new SuccessResult(Messages.ChatRoomCreated);
         }
+
 
         public IResult Update(ChatRoomUpdateDto chatRoomUpdateDto)
         {
@@ -80,19 +104,12 @@ namespace Business.Concrete
             return new SuccessDataResult<ChatRoomDetailDto>(chatRoomDetailDto);
         }
 
-        [CacheAspect]
+        //[CacheAspect]
         [PerformanceAspect(1)]
         public IDataResult<List<ChatRoomDetailDto>> GetAll()
         {
             var chatRooms = _chatRoomDal.GetAll();
-            var chatRoomDetails = chatRooms.Select(c => new ChatRoomDetailDto
-            {
-                Id = c.Id,
-                Name = c.Name,
-                CreatedAt = c.CreatedAt
-            }).ToList();
-
-            return new SuccessDataResult<List<ChatRoomDetailDto>>(chatRoomDetails);
+            return new SuccessDataResult<List<ChatRoomDetailDto>>(chatRooms.Data);
         }
     }
 

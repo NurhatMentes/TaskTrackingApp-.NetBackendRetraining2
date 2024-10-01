@@ -6,6 +6,7 @@ namespace Entities.DTOs
     {
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public List<int> UserIds { get; set; }
     }
 
 }

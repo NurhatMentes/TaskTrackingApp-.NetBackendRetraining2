@@ -76,9 +76,9 @@ namespace WebAPI.Controllers
             var result = _taskService.Update(taskUpdateDto);
             if (result.IsSuccess)
             {
-                return Ok(result.Message);
+                return Ok(new { isSuccess = true, message = result.Message });
             }
-            return BadRequest(result.Message);
+            return BadRequest(new { isSuccess = false, message = result.Message });
         }
     }
 }

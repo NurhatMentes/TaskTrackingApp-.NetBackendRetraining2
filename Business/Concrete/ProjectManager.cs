@@ -21,12 +21,14 @@ namespace Business.Concrete
         private IProjectDal _projectDal;
         private ITokenHelper _tokenHelper;
         private IHttpContextAccessor _httpContextAccessor;
+        private IChatRoomDal _chatRoomDal;
 
-        public ProjectManager(IProjectDal dal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor)
+        public ProjectManager(IProjectDal dal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor, IChatRoomDal chatRoomDal)
         {
             _projectDal = dal;
             _tokenHelper = tokenHelper;
             _httpContextAccessor = httpContextAccessor;
+            _chatRoomDal = chatRoomDal;
         }
 
         [CacheAspect(1)]
@@ -76,6 +78,17 @@ namespace Business.Concrete
             };
 
             _projectDal.Add(project);
+         
+
+            var chatroom = new ChatRoom
+            {
+                Name = projectAddDto.ProjectName + " Sohbet Odası",
+                CreatedAt = DateTime.UtcNow,
+                CreatedByUserId = createdByUserId,
+                RelatedProjectId = project.Id
+            };
+
+              _chatRoomDal.Add(chatroom);
 
             return new SuccessResult(Messages.ProjectAdded);
         }

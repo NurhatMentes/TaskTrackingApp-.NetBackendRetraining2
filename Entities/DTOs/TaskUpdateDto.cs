@@ -8,11 +8,12 @@ namespace Entities.DTOs
         public int Id { get; set; }
         public int ProjectId { get; set; }
         public int? AssignedUserId { get; set; }
-        public int UpdatedByUserId { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public PriorityLevel Priority { get; set; }
         public bool? Status { get; set; }
         public DateTime EndDate { get; set; }
+        public string? UpdatedByUserEmail { get; set; }
+        public string? UpdatedByUserName { get; set; }
     }
 }

@@ -7,9 +7,11 @@ using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
+using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -21,13 +23,41 @@ namespace Business.Concrete
         private readonly IChatRoomUserDal _chatRoomUserDal;
         private readonly IUserService _userService;
         private readonly IChatRoomService _chatRoomService;
+        private ITokenHelper _tokenHelper;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public ChatRoomUserManager(IChatRoomUserDal chatRoomUserDal, IUserService userService, IChatRoomService chatRoomService)
+        public ChatRoomUserManager(IChatRoomUserDal chatRoomUserDal, IUserService userService,
+            IChatRoomService chatRoomService, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor)
         {
             _chatRoomUserDal = chatRoomUserDal;
             _userService = userService;
             _chatRoomService = chatRoomService;
+            _tokenHelper = tokenHelper; 
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        public IResult JoinChatRoom(int chatRoomId)
+        {
+            var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
+
+            // Chat odasında zaten kayıtlı mı kontrol et
+            var existingUser = _chatRoomUserDal.Get(c => c.ChatRoomId == chatRoomId && c.UserId == userId);
+            if (existingUser != null)
+            {
+                return new ErrorResult("Kullanıcı zaten bu odada.");
+            }
+
+            // Kullanıcıyı odaya ekle
+            var chatRoomUser = new ChatRoomUser
+            {
+                ChatRoomId = chatRoomId,
+                UserId = userId
+            };
+            _chatRoomUserDal.Add(chatRoomUser);
+
+            return new SuccessResult("Sohbet odasına katıldınız.");
+        }
+
 
         public IResult Add(ChatRoomUserAddDto chatRoomUserAddDto)
         {

@@ -12,6 +12,7 @@ namespace Business.Abstract
         IDataResult<ChatRoomUser> GetByChatRoomIdWithUserId(int chatRoomId, int userId);
         IDataResult<List<ChatRoomUserDto>> GetByChatRoomId(int chatRoomId);
         IDataResult<List<ChatRoomUserDto>> GetByWithUserId(int userId);
+        IResult JoinChatRoom(int chatRoomId);
     }
 
 }

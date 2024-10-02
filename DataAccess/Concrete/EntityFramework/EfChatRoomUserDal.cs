@@ -31,13 +31,12 @@ namespace DataAccess.Concrete.EntityFramework
             {
                 var result = from chatRoomUser in context.ChatRoomUsers
                              join chatRoom in context.ChatRooms on chatRoomUser.ChatRoomId equals chatRoom.Id
-                             join user in context.Users on chatRoomUser.UserId equals user.Id
                              where chatRoom.Id == chatRoomId
                              select new ChatRoomUserDto
                              {
                                  ChatRoomName = chatRoom.Name,
-                                 UserName = user.FirstName + "" + user.LastName,
-                                 UserEmail = user.Email
+                                 UserName = chatRoomUser.User.FirstName + "" + chatRoomUser.User.LastName,
+                                 UserEmail = chatRoomUser.User.Email
                              };
 
             

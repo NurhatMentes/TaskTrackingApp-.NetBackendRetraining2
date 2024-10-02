@@ -26,6 +26,7 @@ namespace Business.Concrete
             _userService = userService; 
         }
 
+      
         [SecuredOperation("Admin,Project Manager,Member")]
         [ValidationAspect(typeof(MessageValidator))]
         public IResult Add(MessageAddDto messageAddDto)
@@ -90,7 +91,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.MessageDeleted);
         }
 
-        [CacheAspect]
+
         [PerformanceAspect(1)]
         public IDataResult<MessageDto> GetById(int id)
         {
@@ -103,7 +104,7 @@ namespace Business.Concrete
             return new SuccessDataResult<MessageDto>(result);
         }
 
-        [CacheAspect]
+  
         [PerformanceAspect(1)]
         public IDataResult<List<MessageDto>> GetAll()
         {
@@ -111,7 +112,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<MessageDto>>(result);
         }
 
-        [CacheAspect]
+
         [PerformanceAspect(1)]
         public IDataResult<List<MessageDto>> GetMessagesByChatRoomId(int chatRoomId)
         {

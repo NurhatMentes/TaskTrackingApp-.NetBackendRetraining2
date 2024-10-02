@@ -16,6 +16,18 @@ namespace WebAPI.Controllers
             _chatRoomUserService = chatRoomUserService;
         }
 
+
+        [HttpPost("join/{chatRoomId}")]
+        public IActionResult JoinChatRoom(int chatRoomId)
+        {
+            var result = _chatRoomUserService.JoinChatRoom(chatRoomId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
         [HttpPost]
         public IActionResult Add([FromBody] ChatRoomUserAddDto chatRoomUserAddDto)
         {

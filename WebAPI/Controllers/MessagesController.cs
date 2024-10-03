@@ -23,9 +23,9 @@ namespace WebAPI.Controllers
             var result = _messageService.Add(messageCreateDto);
             if (result.IsSuccess)
             {
-                Ok(new { isSuccess = true, message = result.Message });
+                return Ok(result);
             }
-            return BadRequest(new { isSuccess = false, message = result.Message });
+            return BadRequest(result);
         }
 
         [HttpPut]

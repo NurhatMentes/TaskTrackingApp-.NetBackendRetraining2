@@ -7,7 +7,6 @@ namespace Entities.DTOs
         public int ChatRoomId { get; set; } 
         public int MessageSenderId { get; set; } 
         public string Content { get; set; }
-        public DateTime SendAt { get; set; } = DateTime.Now;
     }
 
 }

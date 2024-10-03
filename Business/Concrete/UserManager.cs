@@ -13,6 +13,7 @@ using Core.Utilities.Security.Hashing;
 using Core.Entities.DTOs;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Http;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
@@ -61,7 +62,8 @@ namespace Business.Concrete
                 CreatedAt = DateTime.UtcNow,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Status = true
+                Status = true,
+                OnlineStatus = false
             };
 
             _userDal.Add(user);
@@ -97,6 +99,8 @@ namespace Business.Concrete
             existingUser.LastName = userForUpdateDto.LastName;
             existingUser.Status = userForUpdateDto.Status;
             existingUser.UpdatedAt = DateTime.UtcNow;
+            existingUser.OnlineStatus = userForUpdateDto.OnlineStatus ?? existingUser.OnlineStatus;
+
 
             _userDal.Update(existingUser);
             return new SuccessResult(Messages.UserUpdated);

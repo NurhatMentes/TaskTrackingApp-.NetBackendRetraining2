@@ -20,6 +20,7 @@ namespace Core.Entities.DTOs
         public string? AssignedBy { get; set; }
         public DateTime? TaskStartDate { get; set; }
         public DateTime? TaskEndDate { get; set; }
+        public bool? OnlineStatus { get; set; }
     }
 
 }

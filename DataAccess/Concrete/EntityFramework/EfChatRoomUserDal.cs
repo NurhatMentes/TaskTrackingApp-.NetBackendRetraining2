@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.EntityFramework;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -18,7 +19,8 @@ namespace DataAccess.Concrete.EntityFramework
                              {
                                  ChatRoomName = chatRoom.Name, 
                                  UserName = user.FirstName+""+user.LastName,         
-                                 UserEmail = user.Email        
+                                 UserEmail = user.Email,
+                                 OnlineStatus = user.OnlineStatus
                              };
 
                 return new SuccessDataResult<List<ChatRoomUserDto>>(result.ToList());
@@ -36,7 +38,8 @@ namespace DataAccess.Concrete.EntityFramework
                              {
                                  ChatRoomName = chatRoom.Name,
                                  UserName = chatRoomUser.User.FirstName + "" + chatRoomUser.User.LastName,
-                                 UserEmail = chatRoomUser.User.Email
+                                 UserEmail = chatRoomUser.User.Email,
+                                 OnlineStatus = chatRoomUser.User.OnlineStatus
                              };
 
             
@@ -62,7 +65,8 @@ namespace DataAccess.Concrete.EntityFramework
                              {
                                  ChatRoomName = chatRoom.Name,
                                  UserName = user.FirstName + "" + user.LastName,
-                                 UserEmail = user.Email
+                                 UserEmail = user.Email,
+                                 OnlineStatus = user.OnlineStatus
                              };
 
                 if (!result.Any())

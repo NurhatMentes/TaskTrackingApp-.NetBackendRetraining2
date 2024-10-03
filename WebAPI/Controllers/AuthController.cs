@@ -53,5 +53,18 @@ namespace WebAPI.Controllers
             return BadRequest(new { Message = result.Message });
         }
 
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            var result = _authService.Logout();
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result.Message);
+        }
+
     }
 }

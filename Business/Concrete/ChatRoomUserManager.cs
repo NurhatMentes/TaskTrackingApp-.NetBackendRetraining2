@@ -40,14 +40,12 @@ namespace Business.Concrete
         {
             var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
 
-            // Chat odasında zaten kayıtlı mı kontrol et
             var existingUser = _chatRoomUserDal.Get(c => c.ChatRoomId == chatRoomId && c.UserId == userId);
             if (existingUser != null)
             {
                 return new ErrorResult("Kullanıcı zaten bu odada.");
             }
 
-            // Kullanıcıyı odaya ekle
             var chatRoomUser = new ChatRoomUser
             {
                 ChatRoomId = chatRoomId,

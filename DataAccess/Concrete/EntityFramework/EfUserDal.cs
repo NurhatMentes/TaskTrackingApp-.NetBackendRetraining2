@@ -50,7 +50,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  TaskName = t.Name,
                                  AssignedBy = t.AssignedUserId != null ? t.AssignedUser.FirstName + " " + t.AssignedUser.LastName : null,
                                  TaskStartDate = t.CreatedAt,
-                                 TaskEndDate = t.EndDate
+                                 TaskEndDate = t.EndDate,
+                                 OnlineStatus =  user.OnlineStatus
                              };
                 return result.FirstOrDefault();
             }

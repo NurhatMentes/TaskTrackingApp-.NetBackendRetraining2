@@ -21,7 +21,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  Content = message.Content,
                                  SentAt = message.SentAt,
                                  MessageSenderName = user.FirstName + " " + user.LastName,
-                                 ChatRoomName = chatRoom.Name
+                                 ChatRoomName = chatRoom.Name,
+                                 SenderMail = user.Email
                              };
 
                 return new SuccessDataResult<List<MessageDto>>(result.ToList());
@@ -41,7 +42,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  ChatRoomName = chatRoom.Name,
                                  MessageSenderName = user.FirstName + " " + user.LastName,
                                  Content = message.Content,
-                                 SentAt = message.SentAt
+                                 SentAt = message.SentAt,
+                                 SenderMail = user.Email
                              };
 
                 return new SuccessDataResult<List<MessageDto>>(result.ToList());

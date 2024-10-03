@@ -6,6 +6,8 @@ using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -15,14 +17,18 @@ namespace Business.Concrete
         private ITokenHelper _tokenHelper;
         private IOperationClaimDal _operationClaimDal;
         private IUserOperationClaimDal _userOperationClaimDal;
+        private IUserDal _userDal;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public AuthManager(IUserService userService, ITokenHelper tokenHelper,
-                         IOperationClaimDal operationClaimDal, IUserOperationClaimDal userOperationClaimDal)
+                         IOperationClaimDal operationClaimDal, IUserOperationClaimDal userOperationClaimDal, IUserDal userDal, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
             _operationClaimDal = operationClaimDal;
             _userOperationClaimDal = userOperationClaimDal;
+            _userDal = userDal;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
@@ -80,8 +86,30 @@ namespace Business.Concrete
                 return new ErrorDataResult<User>(Messages.PasswordError);
             }
 
+            userToCheck.OnlineStatus = true;
+            _userDal.Update(userToCheck);
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
+
+        public IResult Logout()
+        {
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            TokenBlacklist.AddToken(token);
+
+            var userId = _tokenHelper.GetUserIdFromToken(token);
+
+            var existingUser = _userDal.Get(p => p.Id == userId);
+            if (existingUser != null)
+            {
+                existingUser.OnlineStatus = false;
+                _userDal.Update(existingUser);
+            }
+
+            return new SuccessResult(Messages.UserLoggedOut);
+        }
+
+
 
         public IResult UserExists(string email)
         {

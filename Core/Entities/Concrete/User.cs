@@ -12,6 +12,7 @@
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool Status { get; set; }
+        public bool OnlineStatus { get; set; }
     }
 
 }

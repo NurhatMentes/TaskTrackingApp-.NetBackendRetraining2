@@ -79,6 +79,7 @@
         public static string ChatRoomUserAlreadyExists = "Bu kullanıcı zaten sohbet odasına kayıtlı.";
         public static string InvalidUserId = "Geçersiz kullanıcı ID'si.";
         public static string InvalidChatRoomId = "Geçersiz sohbet odası ID'si.";
+        public const string ChatRoomUserNotRegistered = "Kayıtlı kullanıcı değilsiniz. Sohbet odasına katılamazsınız.";
 
         //Message
         public static string MessageAdded = "Mesaj gönderildi.";

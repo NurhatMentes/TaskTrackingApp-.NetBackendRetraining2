@@ -17,10 +17,12 @@ namespace DataAccess.Concrete.EntityFramework
                              join user in context.Users on chatRoomUser.UserId equals user.Id
                              select new ChatRoomUserDto
                              {
+                                 ChatRoomId = chatRoom.Id,
+                                 UserId = chatRoomUser.User.Id,
                                  ChatRoomName = chatRoom.Name, 
-                                 UserName = user.FirstName+""+user.LastName,         
-                                 UserEmail = user.Email,
-                                 OnlineStatus = user.OnlineStatus
+                                 UserName = chatRoomUser.User.FirstName+""+ chatRoomUser.User.LastName,         
+                                 UserEmail = chatRoomUser.User.Email,
+                                 OnlineStatus = chatRoomUser.User.OnlineStatus
                              };
 
                 return new SuccessDataResult<List<ChatRoomUserDto>>(result.ToList());
@@ -36,6 +38,8 @@ namespace DataAccess.Concrete.EntityFramework
                              where chatRoom.Id == chatRoomId
                              select new ChatRoomUserDto
                              {
+                                 ChatRoomId = chatRoomUser.ChatRoomId,
+                                 UserId = chatRoomUser.Id,
                                  ChatRoomName = chatRoom.Name,
                                  UserName = chatRoomUser.User.FirstName + "" + chatRoomUser.User.LastName,
                                  UserEmail = chatRoomUser.User.Email,
@@ -63,10 +67,12 @@ namespace DataAccess.Concrete.EntityFramework
                              where chatRoomUser.UserId == userId    
                              select new ChatRoomUserDto
                              {
+                                 ChatRoomId = chatRoom.Id,
+                                 UserId= chatRoomUser.User.Id,
                                  ChatRoomName = chatRoom.Name,
-                                 UserName = user.FirstName + "" + user.LastName,
-                                 UserEmail = user.Email,
-                                 OnlineStatus = user.OnlineStatus
+                                 UserName = chatRoomUser.User.FirstName + "" + chatRoomUser.User.LastName,
+                                 UserEmail = chatRoomUser.User.Email,
+                                 OnlineStatus = chatRoomUser.User.OnlineStatus
                              };
 
                 if (!result.Any())

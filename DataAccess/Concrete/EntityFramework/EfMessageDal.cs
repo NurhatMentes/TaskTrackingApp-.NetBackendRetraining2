@@ -19,7 +19,7 @@ namespace DataAccess.Concrete.EntityFramework
                              {
                                  Id = message.Id,
                                  Content = message.Content,
-                                 SentAt = message.SentAt,
+                                 SendAt = message.SendAt,
                                  MessageSenderName = user.FirstName + " " + user.LastName,
                                  ChatRoomName = chatRoom.Name,
                                  SenderMail = user.Email
@@ -42,7 +42,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  ChatRoomName = chatRoom.Name,
                                  MessageSenderName = user.FirstName + " " + user.LastName,
                                  Content = message.Content,
-                                 SentAt = message.SentAt,
+                                 SendAt = message.SendAt,
                                  SenderMail = user.Email
                              };
 

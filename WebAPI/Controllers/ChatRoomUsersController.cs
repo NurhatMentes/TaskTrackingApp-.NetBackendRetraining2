@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +93,18 @@ namespace WebAPI.Controllers
         public IActionResult GetAll()
         {
             var result = _chatRoomUserService.GetAll();
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("getchatrooms")]
+        public IActionResult GetChatRooms()
+        {
+            var result = _chatRoomUserService.GetChatRooms();
             if (result.IsSuccess)
             {
                 return Ok(result);

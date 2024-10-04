@@ -9,6 +9,6 @@ namespace Entities.DTOs
         public string MessageSenderName { get; set; }
         public string SenderMail { get; set; }
         public string Content { get; set; }
-        public DateTime SentAt { get; set; }
+        public DateTime SendAt { get; set; }
     }
 }

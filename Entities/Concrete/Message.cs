@@ -13,6 +13,6 @@ namespace Entities.Concrete
         public User User { get; set; }
 
         public string Content { get; set; } 
-        public DateTime SentAt { get; set; } 
+        public DateTime SendAt { get; set; } 
     }
 }

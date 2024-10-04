@@ -9,6 +9,7 @@ using Core.Utilities.Business;
 using Core.Utilities.Results;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +17,7 @@ using Microsoft.AspNetCore.Http;
 namespace Business.Concrete
 {
 
-    [SecuredOperation("Admin,Project Manager,Member")]
-    [ValidationAspect(typeof(ChatRoomUserValidator))]
+
     public class ChatRoomUserManager : IChatRoomUserService
     {
         private readonly IChatRoomUserDal _chatRoomUserDal;
@@ -32,7 +32,7 @@ namespace Business.Concrete
             _chatRoomUserDal = chatRoomUserDal;
             _userService = userService;
             _chatRoomService = chatRoomService;
-            _tokenHelper = tokenHelper; 
+            _tokenHelper = tokenHelper;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -40,10 +40,16 @@ namespace Business.Concrete
         {
             var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
 
+            var userExists = _chatRoomUserDal.Get(c => c.ChatRoomId == chatRoomId && c.UserId == userId);
+            if (userExists == null)
+            {
+                return new ErrorResult(Messages.ChatRoomUserNotRegistered);
+            }
+
             var existingUser = _chatRoomUserDal.Get(c => c.ChatRoomId == chatRoomId && c.UserId == userId);
             if (existingUser != null)
             {
-                return new ErrorResult("Kullanıcı zaten bu odada.");
+                return new ErrorResult(Messages.ChatRoomUserAlreadyExists);
             }
 
             var chatRoomUser = new ChatRoomUser
@@ -53,16 +59,18 @@ namespace Business.Concrete
             };
             _chatRoomUserDal.Add(chatRoomUser);
 
-            return new SuccessResult("Sohbet odasına katıldınız.");
+            return new SuccessResult(Messages.ChatRoomUserAdded);
         }
 
 
+        [SecuredOperation("Admin,Project Manager,Member")]
+        [ValidationAspect(typeof(ChatRoomUserValidator))]
         public IResult Add(ChatRoomUserAddDto chatRoomUserAddDto)
         {
             var result = BusinessRules.Run(
                 CheckIfChatRoomExists(chatRoomUserAddDto.ChatRoomId),
                 CheckIfUserExists(chatRoomUserAddDto.UserId),
-                CheckIfChatRoomUserExists(chatRoomUserAddDto.ChatRoomId,chatRoomUserAddDto.UserId)
+                CheckIfChatRoomUserExists(chatRoomUserAddDto.ChatRoomId, chatRoomUserAddDto.UserId)
                );
 
             if (result != null)
@@ -80,6 +88,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ChatRoomUserAdded);
         }
 
+        [SecuredOperation("Admin,Project Manager")]
+        [ValidationAspect(typeof(ChatRoomUserValidator))]
         public IResult Delete(int chatRoomId, int userId)
         {
             var chatRoomUser = _chatRoomUserDal.Get(cru => cru.ChatRoomId == chatRoomId && cru.UserId == userId);
@@ -108,7 +118,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<ChatRoomUser>(Messages.ChatRoomUserNotFound);
             }
 
-            return new SuccessDataResult<ChatRoomUser>(result, Messages.ChatRoomUserFound);
+            return new SuccessDataResult<ChatRoomUser>(result);
         }
 
         public IDataResult<List<ChatRoomUserDto>> GetByChatRoomId(int chatRoomId)
@@ -136,6 +146,49 @@ namespace Business.Concrete
         }
 
 
+        public IDataResult<List<ChatRoomUserDto>> GetChatRooms()
+        {
+            var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
+
+            var user = _userService.GetById(userId).Data;
+
+            var userClaims = _userService.GetClaims(user);
+            bool isAdmin = userClaims.Data.Any(claim => claim.OperationClaimName == "Admin");
+
+            if (isAdmin)
+            {
+                var allChatRooms = _chatRoomUserDal.GetAllChatRoomsWithUsers().Data;
+                var chatRoomUsers = allChatRooms.Select(chatRoom => new ChatRoomUserDto
+                {
+                    ChatRoomId = chatRoom.ChatRoomId,
+                    UserId = userId,
+                    UserName = chatRoom.UserName,
+                    ChatRoomName = chatRoom.ChatRoomName,
+                    UserEmail=chatRoom.UserEmail,
+                    OnlineStatus = chatRoom.OnlineStatus
+                }).ToList();
+                return new SuccessDataResult<List<ChatRoomUserDto>>(chatRoomUsers);
+
+            }
+            else
+            {
+                var userChatRooms = _chatRoomUserDal.GetAllChatRoomsWithUsersByUserId(userId).Data;
+                var chatRoomUsers = userChatRooms.Select(chatRoomDto => new ChatRoomUserDto
+                {
+                    ChatRoomId = chatRoomDto.ChatRoomId, 
+                    UserId = chatRoomDto.UserId,
+                    ChatRoomName = chatRoomDto.ChatRoomName,
+                    OnlineStatus = chatRoomDto.OnlineStatus,
+                    UserEmail = chatRoomDto.UserEmail,
+                    UserName = chatRoomDto.UserName 
+                }).ToList();
+                return new SuccessDataResult<List<ChatRoomUserDto>>(chatRoomUsers);
+
+            }
+        }
+
+
+
 
         //**************Business Rules**************
         private IResult CheckIfUserExists(int userId)
@@ -143,7 +196,7 @@ namespace Business.Concrete
             var userExists = _userService.GetById(userId) != null;
             if (!userExists)
             {
-                return new ErrorResult(Messages.UserNotFound); 
+                return new ErrorResult(Messages.UserNotFound);
             }
             return new SuccessResult();
         }
@@ -165,7 +218,7 @@ namespace Business.Concrete
         {
             var result = _chatRoomService.GetById(chatRoomId);
 
-            if (result == null || !result.IsSuccess) 
+            if (result == null || !result.IsSuccess)
             {
                 return new ErrorResult(Messages.ChatRoomNotFound);
             }

@@ -46,7 +46,7 @@ namespace Business.Concrete
                 ChatRoomId = messageAddDto.ChatRoomId,
                 UserId = messageAddDto.MessageSenderId,
                 Content = messageAddDto.Content,
-                SentAt = DateTime.Now
+                SendAt = DateTime.Now
             };
 
             _messageDal.Add(message);
@@ -71,7 +71,7 @@ namespace Business.Concrete
             }
 
             message.Content = messageUpdateDto.Content;
-            message.SentAt = DateTime.Now;
+            message.SendAt = DateTime.Now;
 
             _messageDal.Update(message);
             return new SuccessResult(Messages.MessageUpdated);
@@ -151,7 +151,7 @@ namespace Business.Concrete
         }
         private IResult CheckIfMessageCanBeUpdated(Message message)
         {
-            var timeSinceSent = DateTime.Now - message.SentAt;
+            var timeSinceSent = DateTime.Now - message.SendAt;
 
             if (timeSinceSent.TotalMinutes > 5)
             {

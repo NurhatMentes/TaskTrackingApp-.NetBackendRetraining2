@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Core.Constants;
+using Core.Exceptions;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using System.Net;
@@ -29,30 +31,36 @@ namespace Core.Extensions
         private Task HandleExceptionAsync(HttpContext httpContext, Exception e)
         {
             httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
+            var statusCode = (int)HttpStatusCode.InternalServerError;
             string message = "Internal Server Error";
-            IEnumerable<ValidationFailure> errors;
 
-            if (e.GetType() == typeof(ValidationException))
+            if (e is ValidationException validationException)
             {
-                message = e.Message;
-                errors = ((ValidationException)e).Errors;
-                httpContext.Response.StatusCode = 400;
+                statusCode = (int)HttpStatusCode.BadRequest;
+                message = validationException.Message;
                 return httpContext.Response.WriteAsync(new ValidationErrorDetails
                 {
-                    StatusCode = 400,
+                    StatusCode = statusCode,
                     Message = message,
-                    ValidationErrors = errors
+                    ValidationErrors = validationException.Errors
                 }.ToString());
-
             }
 
+            if (e is AuthorizationException authorizationException) 
+            {
+                statusCode = (int)HttpStatusCode.Forbidden; 
+                message = authorizationException.Message;
+            }
+
+            httpContext.Response.StatusCode = statusCode;
             return httpContext.Response.WriteAsync(new ErrorDetails
             {
-                StatusCode = httpContext.Response.StatusCode,
+                StatusCode = statusCode,
                 Message = message
             }.ToString());
         }
+
+
+
     }
 }

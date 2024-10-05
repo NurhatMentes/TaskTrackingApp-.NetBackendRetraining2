@@ -63,7 +63,7 @@ namespace DataAccess.Concrete.EntityFramework
                               join cr in context.ChatRooms on cru.ChatRoomId equals cr.Id
                               join u in context.Users on cr.CreatedByUserId equals u.Id
                               join p in context.Projects on cr.RelatedProjectId equals p.Id into projectGroup
-                              from project in projectGroup.DefaultIfEmpty() // Eğer proje ilişkisi yoksa null bırakıyoruz
+                              from project in projectGroup.DefaultIfEmpty() 
                               where cru.UserId == userId 
                               select new ChatRoomDetailDto
                               {

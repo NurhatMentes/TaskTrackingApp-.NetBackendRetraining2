@@ -27,7 +27,7 @@ namespace Business.Concrete
         }
 
       
-        [SecuredOperation("Admin,Project Manager,Member")]
+        //[SecuredOperation("Admin,Project Manager,Member")]
         [ValidationAspect(typeof(MessageValidator))]
         public IResult Add(MessageAddDto messageAddDto)
         {

@@ -146,48 +146,6 @@ namespace Business.Concrete
         }
 
 
-        public IDataResult<List<ChatRoomUserDto>> GetChatRooms()
-        {
-            var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
-
-            var user = _userService.GetById(userId).Data;
-
-            var userClaims = _userService.GetClaims(user);
-            bool isAdmin = userClaims.Data.Any(claim => claim.OperationClaimName == "Admin");
-
-            if (isAdmin)
-            {
-                var allChatRooms = _chatRoomUserDal.GetAllChatRoomsWithUsers().Data;
-                var chatRoomUsers = allChatRooms.Select(chatRoom => new ChatRoomUserDto
-                {
-                    ChatRoomId = chatRoom.ChatRoomId,
-                    UserId = userId,
-                    UserName = chatRoom.UserName,
-                    ChatRoomName = chatRoom.ChatRoomName,
-                    UserEmail=chatRoom.UserEmail,
-                    OnlineStatus = chatRoom.OnlineStatus
-                }).ToList();
-                return new SuccessDataResult<List<ChatRoomUserDto>>(chatRoomUsers);
-
-            }
-            else
-            {
-                var userChatRooms = _chatRoomUserDal.GetAllChatRoomsWithUsersByUserId(userId).Data;
-                var chatRoomUsers = userChatRooms.Select(chatRoomDto => new ChatRoomUserDto
-                {
-                    ChatRoomId = chatRoomDto.ChatRoomId, 
-                    UserId = chatRoomDto.UserId,
-                    ChatRoomName = chatRoomDto.ChatRoomName,
-                    OnlineStatus = chatRoomDto.OnlineStatus,
-                    UserEmail = chatRoomDto.UserEmail,
-                    UserName = chatRoomDto.UserName 
-                }).ToList();
-                return new SuccessDataResult<List<ChatRoomUserDto>>(chatRoomUsers);
-
-            }
-        }
-
-
 
 
         //**************Business Rules**************

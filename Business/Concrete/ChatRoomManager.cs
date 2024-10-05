@@ -21,13 +21,16 @@ namespace Business.Concrete
         private ITokenHelper _tokenHelper;
         private IHttpContextAccessor _httpContextAccessor;
         private IChatRoomUserDal _chatRoomUserDal;
+        private readonly IUserService _userService;
 
-        public ChatRoomManager(IChatRoomDal chatRoomDal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor, IChatRoomUserDal chatRoomUserDal)
+        public ChatRoomManager(IChatRoomDal chatRoomDal, ITokenHelper tokenHelper,
+            IHttpContextAccessor httpContextAccessor, IChatRoomUserDal chatRoomUserDal, IUserService userService)
         {
             _chatRoomDal = chatRoomDal;
             _tokenHelper = tokenHelper;
             _httpContextAccessor = httpContextAccessor;
             _chatRoomUserDal = chatRoomUserDal;
+            _userService = userService;
         }
 
         public IResult Add(ChatRoomCreateDto chatRoomCreateDto)
@@ -111,6 +114,26 @@ namespace Business.Concrete
             var chatRooms = _chatRoomDal.GetAll();
             return new SuccessDataResult<List<ChatRoomDetailDto>>(chatRooms.Data);
         }
+
+        public IDataResult<List<ChatRoomDetailDto>> GetChatRooms()
+        {
+            var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
+            var user = _userService.GetById(userId).Data;
+            var userClaims = _userService.GetClaims(user);
+            bool isAdmin = userClaims.Data.Any(claim => claim.OperationClaimName == "Admin");
+
+            if (isAdmin)
+            {  
+                var allChatRooms = _chatRoomDal.GetAllChatRoomsWithProjectsAndUsers();
+                return new SuccessDataResult<List<ChatRoomDetailDto>>(allChatRooms);
+            }
+            else
+            {
+                var userChatRooms = _chatRoomDal.GetChatRoomsWithProjectsAndUsersByUserId(userId);
+                return new SuccessDataResult<List<ChatRoomDetailDto>>(userChatRooms);
+            }
+        }
+
     }
 
 }

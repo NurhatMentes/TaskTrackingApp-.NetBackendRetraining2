@@ -10,5 +10,6 @@ namespace Business.Abstract
         IResult Delete(int chatRoomId);
         IDataResult<ChatRoomDetailDto> GetById(int chatRoomId);
         IDataResult<List<ChatRoomDetailDto>> GetAll();
+        IDataResult<List<ChatRoomDetailDto>> GetChatRooms();
     }
 }

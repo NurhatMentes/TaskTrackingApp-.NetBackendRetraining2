@@ -31,5 +31,53 @@ namespace DataAccess.Concrete.EntityFramework
                 return new SuccessDataResult<List<ChatRoomDetailDto>>(chatRooms.ToList());
             }
         }
+
+        public List<ChatRoomDetailDto> GetAllChatRoomsWithProjectsAndUsers()
+        {
+            using (var context = new TaskTrackingAppDBContext())
+            {
+                var result = (from cr in context.ChatRooms
+                              join u in context.Users on cr.CreatedByUserId equals u.Id
+                              join p in context.Projects on cr.RelatedProjectId equals p.Id into projectGroup
+                              from project in projectGroup.DefaultIfEmpty() 
+                              select new ChatRoomDetailDto
+                              {
+                                  Id = cr.Id,
+                                  Name = cr.Name,
+                                  CreatedByUserEmail = u.Email,
+                                  CreatedByUserName = u != null ? u.FirstName + " " + u.LastName : " ",
+                                  CreatedAt = cr.CreatedAt,
+                                  RelatedProjectName = project != null ? project.Name : null 
+                              }).ToList();
+
+                return result;
+            }
+            
+        }
+
+        public List<ChatRoomDetailDto> GetChatRoomsWithProjectsAndUsersByUserId(int userId)
+        {
+            using (var context = new TaskTrackingAppDBContext())
+            {
+                var result = (from cru in context.ChatRoomUsers 
+                              join cr in context.ChatRooms on cru.ChatRoomId equals cr.Id
+                              join u in context.Users on cr.CreatedByUserId equals u.Id
+                              join p in context.Projects on cr.RelatedProjectId equals p.Id into projectGroup
+                              from project in projectGroup.DefaultIfEmpty() // Eğer proje ilişkisi yoksa null bırakıyoruz
+                              where cru.UserId == userId 
+                              select new ChatRoomDetailDto
+                              {
+                                  Id = cr.Id,
+                                  Name = cr.Name,
+                                  CreatedByUserEmail = u.Email,
+                                  CreatedByUserName = u != null ? u.FirstName + " " + u.LastName : " ", 
+                                  CreatedAt = cr.CreatedAt,
+                                  RelatedProjectName = project != null ? project.Name : null 
+                              }).ToList();
+
+                return result;
+            }
+            
+        }
     }
 }

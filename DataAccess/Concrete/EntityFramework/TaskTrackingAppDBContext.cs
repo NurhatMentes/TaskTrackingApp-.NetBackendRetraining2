@@ -59,8 +59,6 @@ namespace DataAccess.Concrete.EntityFramework
                 .HasMany<ChatRoomUser>()
                 .WithOne(cru => cru.User)
                 .HasForeignKey("UserId");
-
-            base.OnModelCreating(modelBuilder);
         }
 
     }

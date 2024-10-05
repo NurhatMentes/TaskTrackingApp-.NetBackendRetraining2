@@ -8,5 +8,7 @@ namespace DataAccess.Abstract
     public interface IChatRoomDal :IEntityRepository<ChatRoom>
     {
         IDataResult<List<ChatRoomDetailDto>> GetAll();
+        List<ChatRoomDetailDto> GetAllChatRoomsWithProjectsAndUsers();
+        List<ChatRoomDetailDto> GetChatRoomsWithProjectsAndUsersByUserId(int userId);
     }
 }

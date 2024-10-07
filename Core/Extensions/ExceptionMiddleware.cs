@@ -33,17 +33,21 @@ namespace Core.Extensions
             httpContext.Response.ContentType = "application/json";
             var statusCode = (int)HttpStatusCode.InternalServerError;
             string message = "Internal Server Error";
+            IEnumerable<ValidationFailure> errors;
 
-            if (e is ValidationException validationException)
+            if (e.GetType() == typeof(ValidationException))
             {
-                statusCode = (int)HttpStatusCode.BadRequest;
-                message = validationException.Message;
+                message = e.Message;
+                errors = ((ValidationException)e).Errors;
+                httpContext.Response.StatusCode = 400;
+
                 return httpContext.Response.WriteAsync(new ValidationErrorDetails
                 {
-                    StatusCode = statusCode,
+                    StatusCode = 400,
                     Message = message,
-                    ValidationErrors = validationException.Errors
+                    ValidationErrors = errors
                 }.ToString());
+
             }
 
 

@@ -5,7 +5,7 @@ namespace Business.Abstract
 {
     public interface IChatRoomService
     {
-        IResult Add(ChatRoomCreateDto chatRoomCreateDto);
+        IResult Add(ChatRoomAddDto chatRoomCreateDto);
         IResult Update(ChatRoomUpdateDto chatRoomUpdateDto);
         IResult Delete(int chatRoomId);
         IDataResult<ChatRoomDetailDto> GetById(int chatRoomId);

@@ -28,7 +28,7 @@ namespace Business.Concrete
 
       
         //[SecuredOperation("Admin,Project Manager,Member")]
-        [ValidationAspect(typeof(MessageValidator))]
+        [ValidationAspect(typeof(MessageAddValidator))]
         public IResult Add(MessageAddDto messageAddDto)
         {
             var result = BusinessRules.Run(
@@ -54,7 +54,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager,Member")]
-        [ValidationAspect(typeof(MessageValidator))]
+        [ValidationAspect(typeof(MessageUdpadteValidator))]
         public IResult Update(MessageUpdateDto messageUpdateDto)
         {
             var message = _messageDal.Get(m => m.Id == messageUpdateDto.Id);

@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
-    //[SecuredOperation("Admin,Project Manager,Member")]
     [ValidationAspect(typeof(ChatRoomValidator))]
     public class ChatRoomManager : IChatRoomService
     {
@@ -33,22 +32,23 @@ namespace Business.Concrete
             _userService = userService;
         }
 
-        public IResult Add(ChatRoomCreateDto chatRoomCreateDto)
+        [ValidationAspect(typeof(ChatRoomAddValidator))]
+        public IResult Add(ChatRoomAddDto chatRoomAddDto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var createdByUserId = _tokenHelper.GetUserIdFromToken(token);
 
             var chatRoom = new ChatRoom
             {
-                Name = chatRoomCreateDto.Name,
+                Name = chatRoomAddDto.Name,
                 CreatedByUserId = createdByUserId,
-                CreatedAt = chatRoomCreateDto.CreatedAt
+                CreatedAt = chatRoomAddDto.CreatedAt
             };
 
             _chatRoomDal.Add(chatRoom);
 
 
-            foreach (var userId in chatRoomCreateDto.UserIds)
+            foreach (var userId in chatRoomAddDto.UserIds)
             {
                 var chatRoomUser = new ChatRoomUser
                 {
@@ -61,7 +61,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ChatRoomCreated);
         }
 
-
+        [ValidationAspect(typeof(ChatRoomUpdateValidator))]
         public IResult Update(ChatRoomUpdateDto chatRoomUpdateDto)
         {
             var existingChatRoom = _chatRoomDal.Get(c => c.Id == chatRoomUpdateDto.Id);

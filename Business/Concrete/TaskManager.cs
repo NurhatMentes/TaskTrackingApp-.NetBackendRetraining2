@@ -29,7 +29,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(TaskValidator))]
+        [ValidationAspect(typeof(TaskAddValidator))]
         public IResult Add(TaskAddDto taskAddDto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -53,7 +53,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(TaskValidator))]
+        [ValidationAspect(typeof(TaskUpdateValidator))]
         public IResult Update(TaskUpdateDto taskUpdateDto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");

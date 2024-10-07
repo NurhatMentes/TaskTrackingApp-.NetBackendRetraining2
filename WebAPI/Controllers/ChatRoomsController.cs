@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromBody] ChatRoomCreateDto chatRoomCreateDto)
+        public IActionResult Create([FromBody] ChatRoomAddDto chatRoomCreateDto)
         {
             var result = _chatRoomService.Add(chatRoomCreateDto);
             if (result.IsSuccess)

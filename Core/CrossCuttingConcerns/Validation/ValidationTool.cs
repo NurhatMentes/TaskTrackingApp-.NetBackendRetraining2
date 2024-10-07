@@ -11,7 +11,8 @@ namespace Core.CrossCuttingConcerns.Validation
 
             if (!result.IsValid)
             {
-                throw new ValidationException(result.Errors);
+                var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
+                throw new ValidationException(string.Join(", ", errors)); 
             }
         }
     }

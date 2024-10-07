@@ -42,7 +42,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin")]
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(UserAddValidator))]
         public IDataResult<UserForRegisterDto> Add(UserForRegisterDto userForRegisterDto, string password)
         {
             var result = BusinessRules.Run(CheckIfUserEmailAlreadyExists(userForRegisterDto.Email));
@@ -80,7 +80,7 @@ namespace Business.Concrete
         }
 
 
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(UserUdpateValidator))]
         public IResult Update(UserForUpdateDto userForUpdateDto, int userId)
         {
             var existingUser = _userDal.Get(p => p.Id == userId);

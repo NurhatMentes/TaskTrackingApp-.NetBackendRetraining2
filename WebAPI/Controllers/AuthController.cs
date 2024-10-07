@@ -58,12 +58,11 @@ namespace WebAPI.Controllers
         {
             var result = _authService.Logout();
 
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                return Ok(new { result.Message });
             }
-
-            return Ok(result.Message);
+            return BadRequest(new { result.Message });
         }
 
     }

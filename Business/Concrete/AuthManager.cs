@@ -93,21 +93,45 @@ namespace Business.Concrete
 
         public IResult Logout()
         {
+            // Token'ı al ve doğrula
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            TokenBlacklist.AddToken(token);
-
-            var userId = _tokenHelper.GetUserIdFromToken(token);
-
-            var existingUser = _userDal.Get(p => p.Id == userId);
-            if (existingUser != null)
+            if (string.IsNullOrEmpty(token))
             {
-                existingUser.OnlineStatus = false;
-                _userDal.Update(existingUser);
+                return new ErrorResult("Token bulunamadı.");
             }
 
-            return new SuccessResult(Messages.UserLoggedOut);
+            // Token'ı kara listeye ekle
+            TokenBlacklist.AddToken(token);
+
+            try
+            {
+                // Token'dan kullanıcı ID'sini al
+                var userId = _tokenHelper.GetUserIdFromToken(token);
+                if (userId == null)
+                {
+                    return new ErrorResult("Geçersiz token.");
+                }
+
+                // Kullanıcıyı al ve çevrimdışı yap
+                var existingUser = _userDal.Get(p => p.Id == userId);
+                if (existingUser == null)
+                {
+                    return new ErrorResult("Kullanıcı bulunamadı.");
+                }
+
+                existingUser.OnlineStatus = false;
+                _userDal.Update(existingUser);
+
+                return new SuccessResult(Messages.UserLoggedOut);
+            }
+            catch (Exception ex)
+            {
+                // Herhangi bir hata durumunda işlemi geri al veya logla
+                return new ErrorResult($"Çıkış işlemi sırasında bir hata oluştu: {ex.Message}");
+            }
         }
+
 
 
 

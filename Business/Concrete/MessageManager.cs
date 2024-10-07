@@ -78,7 +78,6 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager,Member")]
-        [ValidationAspect(typeof(MessageValidator))]
         public IResult Delete(int id)
         {
             var messageToDelete = _messageDal.Get(m => m.Id == id);

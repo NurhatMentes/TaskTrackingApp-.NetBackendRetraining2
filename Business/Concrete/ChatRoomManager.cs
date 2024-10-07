@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
-    [ValidationAspect(typeof(ChatRoomValidator))]
     public class ChatRoomManager : IChatRoomService
     {
         private readonly IChatRoomDal _chatRoomDal;

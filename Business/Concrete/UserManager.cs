@@ -34,7 +34,7 @@ namespace Business.Concrete
             _userOperationClaimDal = operationClaimDal;    
         }
 
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(UserAddValidator))]
         public IResult UserAdd(User user)
         {
             _userDal.Add(user);
@@ -42,7 +42,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin")]
-        [ValidationAspect(typeof(UserAddValidator))]
+        [ValidationAspect(typeof(UserRegisterValidator))]
         public IDataResult<UserForRegisterDto> Add(UserForRegisterDto userForRegisterDto, string password)
         {
             var result = BusinessRules.Run(CheckIfUserEmailAlreadyExists(userForRegisterDto.Email));
@@ -106,7 +106,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserUpdated);
         }
 
-        [ValidationAspect(typeof(UserValidator))]
         public IResult UpdatePassword(int userId, string currentPassword, string newPassword)
         {
             var existingUser = _userDal.Get(p => p.Id == userId);
@@ -129,7 +128,6 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin")]
-        [ValidationAspect(typeof(UserValidator))]
         public IResult UpdateUserRole(int userId, int operationClaimId)
         {
             var user = _userDal.Get(u => u.Id == userId);

@@ -30,7 +30,8 @@ namespace DataAccess.Concrete.EntityFramework
                                        Role = pu.Role,
                                        ProjectName = p.Name, 
                                        UserName = u.FirstName + " " + u.LastName, 
-                                       UserEmail = u.Email 
+                                       UserEmail = u.Email,
+                                       UpdatedAt = pu.UpdatedAt
                                    };
 
                 return new SuccessDataResult<List<ProjectUserDto>>(projectUsers.ToList());
@@ -58,7 +59,8 @@ namespace DataAccess.Concrete.EntityFramework
                                         Role = pu.Role,
                                         ProjectName = p.Name,
                                         UserName = u.FirstName + " " + u.LastName,
-                                        UserEmail = u.Email
+                                        UserEmail = u.Email,
+                                        UpdatedAt = pu.UpdatedAt
                                     }).ToList();
 
                 if (!projectUsers.Any())
@@ -91,7 +93,8 @@ namespace DataAccess.Concrete.EntityFramework
                                        Role = pu.Role,
                                        ProjectName = p.Name,
                                        UserName = u.FirstName + " " + u.LastName,
-                                       UserEmail = u.Email
+                                       UserEmail = u.Email,
+                                       UpdatedAt = pu.UpdatedAt
                                    };
 
                 return new SuccessDataResult<List<ProjectUserDto>>(projectUsers.ToList());
@@ -119,7 +122,8 @@ namespace DataAccess.Concrete.EntityFramework
                                        Role = pu.Role,
                                        ProjectName = p.Name,
                                        UserName = u.FirstName + " " + u.LastName,
-                                       UserEmail = u.Email
+                                       UserEmail = u.Email,
+                                       UpdatedAt = pu.UpdatedAt
                                    }).FirstOrDefault();
 
                 if (projectUser != null)
@@ -145,7 +149,8 @@ namespace DataAccess.Concrete.EntityFramework
                                   UserId = u.Id,
                                   UserName = u.FirstName + " " + u.LastName,
                                   UserEmail = u.Email,
-                                  Role = pu.Role
+                                  Role = pu.Role,
+                                  UpdatedAt = pu.UpdatedAt
                               })
                              .ToList(); 
 

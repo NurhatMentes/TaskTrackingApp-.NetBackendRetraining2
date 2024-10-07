@@ -42,6 +42,7 @@
         public static string ProjectUserAdded = "Projeye kullanıcı  eklendi.";
         public static string ProjectUserUpdated = "Projeye kullanıcı atandı.";
         public static string ProjectIdCannotBeEmpty = "Proje Id'si boş olamaz.";
+        public static string ProjectEdit = "Değişiklik/ler gerçekleşti.";
         public static string ProjectIdMustBeGreaterThanZero = "Proje ID'si sıfırdan büyük olmalıdır.";
         public static string UserIdCannotBeEmpty = "Kullanıcı Kimliği boş olamaz.";
         public static string UserIdMustBeGreaterThanZero = "Kullanıcı kimliği sıfırdan büyük olmalıdır.";

@@ -52,7 +52,6 @@ namespace Business.Concrete
 
             var existingProjectUser = _projectUserDal.Get(pu => pu.ProjectId == dto.ProjectId && pu.UserId == dto.UserId);
 
-
             if (existingProjectUser == null)
             {
                 return new ErrorResult(Messages.ProjectUserNotFound);
@@ -62,6 +61,7 @@ namespace Business.Concrete
             {
                 var newProjectUserCheck = _projectUserDal.Get(pu => pu.ProjectId == dto.ProjectId && pu.UserId == dto.NewUserId.Value);
 
+         
                 if (newProjectUserCheck != null && newProjectUserCheck.Role == dto.Role)
                 {
                     return new ErrorResult("Bu kullanıcı zaten projeye atanmış durumda.");
@@ -70,18 +70,16 @@ namespace Business.Concrete
                 existingProjectUser.UserId = dto.NewUserId.Value;
             }
 
+
             existingProjectUser.Role = dto.Role;
             existingProjectUser.UpdatedByUserId = updatedByUserId;
-
+            existingProjectUser.UpdatedAt = DateTime.Now;
 
             _projectUserDal.Update(existingProjectUser);
 
-            if (existingProjectUser != null && existingProjectUser.Role != dto.Role)
-            {
-                return new SuccessResult(Messages.RoleUpdated);
-            }
-            return new SuccessResult(Messages.ProjectUserUpdated);
+            return new SuccessResult(Messages.ProjectEdit);
         }
+
 
 
         //[CacheAspect(1)]
@@ -133,10 +131,8 @@ namespace Business.Concrete
 
         public IDataResult<List<ProjectUsersWithUsersDto>> GetAllProjectsWithUsers()
         {
-            // DAL'den verileri al
             var result = _projectUserDal.GetAllProjectsWithUsers();
 
-            // Sonucu kontrol et ve geri döndür
             if (result.IsSuccess)
             {
                 return new SuccessDataResult<List<ProjectUsersWithUsersDto>>(result.Data);

@@ -10,8 +10,9 @@ namespace Entities.Concrete
         public int UserId { get; set; }
         public int? UpdatedByUserId { get; set; }
         public string? Role { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
-  
+
         public Project? Project { get; set; }
         public User? User { get; set; }
     }

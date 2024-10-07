@@ -46,6 +46,7 @@ namespace Core.Extensions
                 }.ToString());
             }
 
+
             if (e is AuthorizationException authorizationException) 
             {
                 statusCode = (int)HttpStatusCode.Forbidden; 

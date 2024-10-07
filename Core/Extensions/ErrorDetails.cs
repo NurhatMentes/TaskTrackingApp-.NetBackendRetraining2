@@ -18,4 +18,4 @@ namespace Core.Extensions
     {
         public IEnumerable<ValidationFailure> ValidationErrors { get; set; }
     }
-}
+}                                                       

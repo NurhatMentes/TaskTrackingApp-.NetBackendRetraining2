@@ -50,7 +50,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(ProjectValidator))]
         public IResult Add(ProjectAddDto projectAddDto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -94,7 +94,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(ProjectValidator))]
         public IResult Update(ProjectUpdateDto projectDto)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -129,7 +129,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin,Project Manager")]
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(ProjectValidator))]
         public IResult ChangeStatus(int projectId, bool status)
         {
             var existingProject = _projectDal.Get(p => p.Id == projectId);

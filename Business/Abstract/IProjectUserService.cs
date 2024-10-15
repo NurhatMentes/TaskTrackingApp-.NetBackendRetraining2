@@ -7,7 +7,7 @@ namespace Business.Abstract
     {
         IDataResult<ProjectUserDto> GetById(int projectUserId);
 
-        IDataResult<List<ProjectUserDto>> GetAllByProjectId(int projectId);
+        IDataResult<List<ProjectUserTaskDto>> GetAllByProjectId(int projectId);
 
         IDataResult<List<ProjectUserDto>> GetAllByUserId(int userId);
 

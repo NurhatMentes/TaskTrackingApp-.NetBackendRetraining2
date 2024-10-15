@@ -90,17 +90,17 @@ namespace Business.Concrete
             return new SuccessDataResult<List<ProjectUserDto>>(projectUsers.Data);
         }
 
-        public IDataResult<List<ProjectUserDto>> GetAllByProjectId(int projectId)
+        public IDataResult<List<ProjectUserTaskDto>> GetAllByProjectId(int projectId)
         {
             var project = _projectUserDal.GetAllByProjectId(projectId);
 
             if (project == null)
             {
-                return new ErrorDataResult<List<ProjectUserDto>>(Messages.ProjectNotFound);
+                return new ErrorDataResult<List<ProjectUserTaskDto>>(Messages.ProjectNotFound);
             }
 
 
-            return new SuccessDataResult<List<ProjectUserDto>>(project.Data);
+            return new SuccessDataResult<List<ProjectUserTaskDto>>(project.Data);
         }
 
 

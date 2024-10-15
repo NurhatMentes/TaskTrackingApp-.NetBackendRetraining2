@@ -88,7 +88,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ChatRoomUserAdded);
         }
 
-        [SecuredOperation("Admin,Project Manager")]
         [ValidationAspect(typeof(ChatRoomUserValidator))]
         public IResult Delete(int chatRoomId, int userId)
         {

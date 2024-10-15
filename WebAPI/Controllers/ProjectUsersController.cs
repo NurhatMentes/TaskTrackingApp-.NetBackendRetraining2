@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("get-all-byproject-id")]
+        [HttpGet("get-all-byprojectid")]
         public IActionResult GetAllByProjectId(int projectId)
         {
             var result = _projectUserService.GetAllByProjectId(projectId);

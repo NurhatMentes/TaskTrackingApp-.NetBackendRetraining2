@@ -38,39 +38,71 @@ namespace DataAccess.Concrete.EntityFramework
             }
         }
 
-        public IDataResult<List<ProjectUserDto>> GetAllByProjectId(int projectId)
+        public IDataResult<List<ProjectUserTaskDto>> GetAllByProjectId(int projectId)
         {
             using (var context = new TaskTrackingAppDBContext())
             {
                 var projectUsers = (from pu in context.ProjectUsers
                                     join p in context.Projects on pu.ProjectId equals p.Id
                                     join u in context.Users on pu.UserId equals u.Id
+                                    join t in context.Tasks on pu.ProjectId equals t.ProjectId into tp
+                                    from t in tp.DefaultIfEmpty()
                                     join updaterUser in context.Users on pu.UpdatedByUserId equals updaterUser.Id into updaterGroup
                                     from updaterUser in updaterGroup.DefaultIfEmpty()
                                     where pu.ProjectId == projectId
-                                    select new ProjectUserDto
+                                    select new
                                     {
-                                        Id = pu.Id,
-                                        ProjectId = pu.ProjectId,
-                                        UserId = pu.UserId,
-                                        UpdatedByUserId = pu.UpdatedByUserId,
-                                        UpdatedByUserName = updaterUser.FirstName + " " + updaterUser.LastName,
-                                        UpdatedByUserEmail = updaterUser.Email,
-                                        Role = pu.Role,
-                                        ProjectName = p.Name,
-                                        UserName = u.FirstName + " " + u.LastName,
-                                        UserEmail = u.Email,
-                                        UpdatedAt = pu.UpdatedAt
+                                        ProjectUser = pu,
+                                        Project = p,
+                                        User = u,
+                                        Task = t,
+                                        UpdatedByUser = updaterUser
+                                    })
+                                    .GroupBy(x => new { x.ProjectUser.UserId, x.ProjectUser.ProjectId })
+                                    .Select(g => new ProjectUserTaskDto
+                                    {
+                                        Id = g.First().ProjectUser.Id,
+                                        ProjectId = g.Key.ProjectId,
+                                        UserId = g.Key.UserId,
+                                        UpdatedByUserId = g.First().ProjectUser.UpdatedByUserId,
+                                        UpdatedByUserName = g.First().UpdatedByUser != null ? g.First().UpdatedByUser.FirstName + " " + g.First().UpdatedByUser.LastName : null,
+                                        UpdatedByUserEmail = g.First().UpdatedByUser != null ? g.First().UpdatedByUser.Email : null,
+                                        Role = g.First().ProjectUser.Role,
+                                        ProjectName = g.First().Project.Name,
+                                        ProjectDescription = g.First().Project.Description,
+                                        ProjectEndDate = (DateTime)g.First().Project.EndDate,
+                                        ProjectStartDate = g.First().Project.StartDate,
+                                        ProjectStatus = g.First().Project.Status,
+                                        UserName = g.First().User.FirstName + " " + g.First().User.LastName,
+                                        UserEmail = g.First().User.Email,
+                                        UpdatedAt = g.First().ProjectUser.UpdatedAt,
+                                      
+                                        Tasks = g.Where(t => t.Task != null && t.Task.AssignedUserId == g.Key.UserId)
+                                                .Select(t => new TaskDto
+                                                {
+                                                    Id = t.Task.Id,
+                                                    Name = t.Task.Name,
+                                                    AssignedUserId = t.Task.AssignedUserId,
+                                                    Description = t.Task.Description,
+                                                    Priority = t.Task.Priority,
+                                                    Status = t.Task.Status,
+                                                    EndDate = t.Task.EndDate  ,
+                                                    AssignedUserName = t.Task.AssignedUser.FirstName + " " + t.Task.AssignedUser.LastName
+                                                }).ToList()
                                     }).ToList();
 
                 if (!projectUsers.Any())
                 {
-                    return new ErrorDataResult<List<ProjectUserDto>>("Proje bulunamadı.");
+                    return new ErrorDataResult<List<ProjectUserTaskDto>>("Proje bulunamadı.");
                 }
 
-                return new SuccessDataResult<List<ProjectUserDto>>(projectUsers);
+                return new SuccessDataResult<List<ProjectUserTaskDto>>(projectUsers);
             }
         }
+
+
+
+
 
         public IDataResult<List<ProjectUserDto>> GetAllByUserId(int userId)
         {

@@ -88,7 +88,7 @@ namespace Business.Concrete
             var currentUserId = _tokenHelper.GetUserIdFromToken(token);
             var currentUser = _userDal.Get(p => p.Id == currentUserId);
 
-            var result = BusinessRules.Run(CheckIfUserExists(existingUser.Id), CheckIfUserCanChangeStatus(currentUser, userForUpdateDto));
+            var result = BusinessRules.Run(CheckIfUserExists(existingUser.Id), CheckIfUserCanChangeStatus(userId, userForUpdateDto));
 
             if (result != null)
             {
@@ -97,6 +97,7 @@ namespace Business.Concrete
 
             existingUser.FirstName = userForUpdateDto.FirstName;
             existingUser.LastName = userForUpdateDto.LastName;
+            existingUser.Email = userForUpdateDto.Email ?? existingUser.Email;
             existingUser.Status = userForUpdateDto.Status;
             existingUser.UpdatedAt = DateTime.UtcNow;
             existingUser.OnlineStatus = userForUpdateDto.OnlineStatus ?? existingUser.OnlineStatus;
@@ -104,6 +105,61 @@ namespace Business.Concrete
 
             _userDal.Update(existingUser);
             return new SuccessResult(Messages.UserUpdated);
+        }
+
+        [ValidationAspect(typeof(UserUdpateValidator))]
+        public IResult AdminUserUpdate(UserForAdminUpdateDto userForAdminUpdateDto)
+        {
+            // Güncellenecek kullanıcı bilgilerini al
+            var userToUpdate = _userDal.Get(p => p.Id == userForAdminUpdateDto.UserToUpdateId);
+
+            // Token'dan giriş yapan Admin kullanıcının bilgilerini al
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var currentUserId = _tokenHelper.GetUserIdFromToken(token);
+
+            // İş kuralları kontrolü
+            var result = BusinessRules.Run(
+                CheckIfUserExists(userToUpdate.Id),
+                CheckIfUserCanUpdate(currentUserId, userToUpdate.Id)
+            );
+
+            if (result != null)
+            {
+                return result;
+            }
+
+            // Kullanıcı bilgilerini güncelle
+            userToUpdate.FirstName = userForAdminUpdateDto.FirstName;
+            userToUpdate.LastName = userForAdminUpdateDto.LastName;
+            userToUpdate.Email = userForAdminUpdateDto.Email ?? userToUpdate.Email;
+            userToUpdate.Status = userForAdminUpdateDto.Status ?? userToUpdate.Status;
+            userToUpdate.UpdatedAt = DateTime.UtcNow;
+
+            _userDal.Update(userToUpdate);
+            return new SuccessResult(Messages.UserUpdated);
+        }
+
+
+
+        [SecuredOperation("Admin")]
+        public IResult UpdateUserRole(int userId, int operationClaimId)
+        {
+            var user = _userDal.Get(u => u.Id == userId);
+            if (user == null)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+
+            var userOperationClaim = _userOperationClaimDal.Get(uoc => uoc.UserId == userId);
+            if (userOperationClaim == null)
+            {
+                return new ErrorResult(Messages.UserRoleNotFound);
+            }
+
+            userOperationClaim.OperationClaimId = operationClaimId;
+            _userOperationClaimDal.Update(userOperationClaim);
+
+            return new SuccessResult(Messages.UserRoleUpdated);
         }
 
         public IResult UpdatePassword(int userId, string currentPassword, string newPassword)
@@ -125,27 +181,6 @@ namespace Business.Concrete
 
             _userDal.Update(existingUser);
             return new SuccessResult(Messages.PasswordUpdated);
-        }
-
-        [SecuredOperation("Admin")]
-        public IResult UpdateUserRole(int userId, int operationClaimId)
-        {
-            var user = _userDal.Get(u => u.Id == userId);
-            if (user == null)
-            {
-                return new ErrorResult(Messages.UserNotFound);
-            }
-
-            var userOperationClaim = _userOperationClaimDal.Get(uoc => uoc.UserId == userId);
-            if (userOperationClaim == null)
-            {
-                return new ErrorResult(Messages.UserRoleNotFound);
-            }
-
-            userOperationClaim.OperationClaimId = operationClaimId;
-            _userOperationClaimDal.Update(userOperationClaim);
-
-            return new SuccessResult(Messages.UserRoleUpdated);
         }
 
 
@@ -171,10 +206,17 @@ namespace Business.Concrete
         }
 
         [PerformanceAspect(1)]
+        public IDataResult<List<OperationClaim>> GetClaimsUserId(int userId)
+        {
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaimsUserId(userId));          
+        }
+
+        [PerformanceAspect(1)]
         public IDataResult<List<OperationClaim>> GetClaims(User user)
         {
-            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));          
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
         }
+
 
         [PerformanceAspect(1)]
         public IDataResult<UserDetailDto> GetUserDetail(int userId)
@@ -194,18 +236,42 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfUserCanChangeStatus(User currentUser, UserForUpdateDto userForUpdateDto)
+        private IResult CheckIfUserCanChangeStatus(int userId, UserForUpdateDto userForUpdateDto)
         {
-            var userClaims = _userDal.GetClaims(currentUser);
+            var userClaims = _userDal.GetClaimsUserId(userId);
+            var existingUser = _userDal.Get(p => p.Id == userId);
             var isAdmin = userClaims.Any(c => c.OperationClaimName == "Admin");
 
-            if (!isAdmin && currentUser.Status != userForUpdateDto.Status)
+            if (!isAdmin && existingUser.Status != userForUpdateDto.Status)
             {
-                return new ErrorResult(Messages.CheckIfUserIsAdmin  );
+                return new ErrorResult(Messages.CheckIfUserIsAdmin );
             }
 
             return new SuccessResult();
         }
+
+        private IResult CheckIfUserCanUpdate(int currentUserId, int userToUpdateId)
+        {
+            var userClaims = _userDal.GetClaimsUserId(currentUserId);
+            var isAdmin = userClaims.Any(c => c.OperationClaimName == "Admin");
+
+            if (!isAdmin)
+            {
+                return new ErrorResult(Messages.CheckIfUserIsAdmin);
+            }
+
+            var userToUpdateClaims = _userDal.GetClaimsUserId(userToUpdateId);
+            var isUserToUpdateAdmin = userToUpdateClaims.Any(c => c.OperationClaimName == "Admin");
+
+            if (isUserToUpdateAdmin)
+            {
+                return new ErrorResult(Messages.AdminCannotUpdateOtherAdmins);
+            }
+
+            return new SuccessResult();
+        }
+
+
 
         private IResult CheckIfUserExists(int userId)
         {
@@ -227,6 +293,5 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-
     }
 }

@@ -21,6 +21,20 @@ namespace DataAccess.Concrete.EntityFramework
             }
         }
 
+        public List<OperationClaim> GetClaimsUserId(int userId)
+        {
+            using (var context = new TaskTrackingAppDBContext())
+            {
+                var result = from operationClaim in context.OperationClaims
+                             join userOperationClaim in context.UserOperationClaims
+                                 on operationClaim.Id equals userOperationClaim.OperationClaimId
+                             where userOperationClaim.UserId == userId
+                             select new OperationClaim { Id = operationClaim.Id, OperationClaimName = operationClaim.OperationClaimName };
+                return result.ToList();
+
+            }
+        }
+
         public UserDetailDto GetUserDetails(int userId)
         {
             using (var context = new TaskTrackingAppDBContext())
@@ -47,8 +61,9 @@ namespace DataAccess.Concrete.EntityFramework
                                  ProjectName = proj.Name,
                                  ProjectStartDate = proj.StartDate,
                                  ProjectEndDate = proj.EndDate,
-                                 TaskName = t.Name,
-                                 AssignedBy = t.AssignedUserId != null ? t.AssignedUser.FirstName + " " + t.AssignedUser.LastName : null,
+                                 TaskName = t != null ? t.Name : null,
+                                 AssignedBy = t.AssignedUserId != null && t.AssignedUser != null
+                                 ? t.AssignedUser.FirstName + " " + t.AssignedUser.LastName : null,
                                  TaskStartDate = t.CreatedAt,
                                  TaskEndDate = t.EndDate,
                                  OnlineStatus =  user.OnlineStatus

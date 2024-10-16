@@ -50,6 +50,17 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("get-claims/{userId}")]
+        public IActionResult GetClaims(int userId)
+        {
+            var result = _userService.GetClaimsUserId(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpPost("add")]
         public IActionResult Post([FromBody] UserForRegisterDto userForRegisterDto)
         {
@@ -65,10 +76,22 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("update")]
-        public IActionResult Update([FromBody] UserForUpdateDto userForUpdateDto, int userId)
+        [HttpPut("update/{userId}")]
+        public IActionResult Update(UserForUpdateDto userForUpdateDto, int userId)
         {
             var result = _userService.Update(userForUpdateDto, userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpPut("admin/update/{userId}")]
+        public IActionResult AdminUpdate(UserForAdminUpdateDto userForAdminUpdateDto)
+        {
+            var result = _userService.AdminUserUpdate(userForAdminUpdateDto);
             if (result.IsSuccess)
             {
                 return Ok(result);

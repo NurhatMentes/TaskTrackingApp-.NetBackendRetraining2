@@ -19,6 +19,7 @@
         public static string PasswordUpdated = "Parolanız güncellendi.";
         public static string CheckIfUserIsAdmin = "Kullanıcı durumunu yalnızca Yöneticiler değiştirebilir.";
         public static string UserLoggedOut = "Çıkış yapıldı.";
+        public static string AdminCannotUpdateOtherAdmins = "Güncellenecek kullanıcı Yönetici olamaz.";
 
         //Project
         public static string ProjectAdded = "Proje başarıyla eklendi.";

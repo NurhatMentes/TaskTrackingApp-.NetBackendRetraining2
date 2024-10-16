@@ -117,7 +117,7 @@ namespace Business.Concrete
         public IDataResult<List<ChatRoomDetailDto>> GetChatRooms()
         {
             var userId = _tokenHelper.GetUserIdFromToken(_httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", ""));
-            var userClaims = _userService.GetClaims(userId);
+            var user = _userService.GetById(userId).Data;
             var userClaims = _userService.GetClaims(user);
             bool isAdmin = userClaims.Data.Any(claim => claim.OperationClaimName == "Admin");
 

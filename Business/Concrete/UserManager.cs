@@ -110,17 +110,14 @@ namespace Business.Concrete
         [ValidationAspect(typeof(UserUdpateValidator))]
         public IResult AdminUserUpdate(UserForAdminUpdateDto userForAdminUpdateDto)
         {
-            // Güncellenecek kullanıcı bilgilerini al
             var userToUpdate = _userDal.Get(p => p.Id == userForAdminUpdateDto.UserToUpdateId);
 
-            // Token'dan giriş yapan Admin kullanıcının bilgilerini al
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var currentUserId = _tokenHelper.GetUserIdFromToken(token);
 
-            // İş kuralları kontrolü
             var result = BusinessRules.Run(
-                CheckIfUserExists(userToUpdate.Id),
-                CheckIfUserCanUpdate(currentUserId, userToUpdate.Id)
+                CheckIfUserExists(userToUpdate.Id)
+               // CheckIfUserCanUpdate(currentUserId, userToUpdate.Id)
             );
 
             if (result != null)
@@ -128,7 +125,6 @@ namespace Business.Concrete
                 return result;
             }
 
-            // Kullanıcı bilgilerini güncelle
             userToUpdate.FirstName = userForAdminUpdateDto.FirstName;
             userToUpdate.LastName = userForAdminUpdateDto.LastName;
             userToUpdate.Email = userForAdminUpdateDto.Email ?? userToUpdate.Email;

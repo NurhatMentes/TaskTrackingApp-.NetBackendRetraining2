@@ -22,5 +22,4 @@ namespace Core.Entities.DTOs
         public DateTime? TaskEndDate { get; set; }
         public bool? OnlineStatus { get; set; }
     }
-
 }

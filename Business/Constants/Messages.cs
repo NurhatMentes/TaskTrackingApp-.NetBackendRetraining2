@@ -13,13 +13,16 @@
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi.";
         public static string UserUpdated = "Kullanıcı başarıyla güncellendi.";
-        public static string UserRoleUpdated = "Kullanıcı rolü başarıyla güncellendi.";
-        public static string UserRoleNotFound = "Kullanıcı rolü evcut değil.";
+        public static string UserRoleUpdated = "Kullanıcı yetkisi güncellendi.";
+        public static string UserRoleNotFound = "Kullanıcı yetkisi mevcut değil.";
         public static string InvalidOldPassword = "Güncel parola yanlış.";
         public static string PasswordUpdated = "Parolanız güncellendi.";
         public static string CheckIfUserIsAdmin = "Kullanıcı durumunu yalnızca Yöneticiler değiştirebilir.";
         public static string UserLoggedOut = "Çıkış yapıldı.";
-        public static string AdminCannotUpdateOtherAdmins = "Güncellenecek kullanıcı Yönetici olamaz.";
+        public static string AdminCannotUpdateOtherAdmins = "Güncellenecek kullanıcı, Yönetici olamaz.";
+
+        //UserOperaitonClaim
+        public static string UserClaimUpdated = "Kullanıcı yetkisi güncellendi.";
 
         //Project
         public static string ProjectAdded = "Proje başarıyla eklendi.";

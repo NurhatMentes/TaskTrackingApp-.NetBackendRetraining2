@@ -13,25 +13,22 @@ using Core.Utilities.Security.Hashing;
 using Core.Entities.DTOs;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Http;
-using Entities.DTOs;
 
 namespace Business.Concrete
 {
     public class UserManager : IUserService
     {
         private IUserDal _userDal;
-        private IUserOperationClaimDal _userOperationClaimDal;
-
-
+        private IUserOperationClaimService _uocService; 
         private ITokenHelper _tokenHelper;
         private IHttpContextAccessor _httpContextAccessor;
 
-        public UserManager(IUserDal dal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor, IUserOperationClaimDal operationClaimDal)
+        public UserManager(IUserDal dal, ITokenHelper tokenHelper, IHttpContextAccessor httpContextAccessor, IUserOperationClaimService uocService)
         {
             _userDal = dal;
             _tokenHelper = tokenHelper;
-            _httpContextAccessor = httpContextAccessor;
-            _userOperationClaimDal = operationClaimDal;    
+            _httpContextAccessor = httpContextAccessor;  
+            _uocService = uocService;
         }
 
         [ValidationAspect(typeof(UserAddValidator))]
@@ -135,29 +132,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserUpdated);
         }
 
-
-
-        [SecuredOperation("Admin")]
-        public IResult UpdateUserRole(int userId, int operationClaimId)
-        {
-            var user = _userDal.Get(u => u.Id == userId);
-            if (user == null)
-            {
-                return new ErrorResult(Messages.UserNotFound);
-            }
-
-            var userOperationClaim = _userOperationClaimDal.Get(uoc => uoc.UserId == userId);
-            if (userOperationClaim == null)
-            {
-                return new ErrorResult(Messages.UserRoleNotFound);
-            }
-
-            userOperationClaim.OperationClaimId = operationClaimId;
-            _userOperationClaimDal.Update(userOperationClaim);
-
-            return new SuccessResult(Messages.UserRoleUpdated);
-        }
-
         public IResult UpdatePassword(int userId, string currentPassword, string newPassword)
         {
             var existingUser = _userDal.Get(p => p.Id == userId);
@@ -179,8 +153,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.PasswordUpdated);
         }
 
-
-
         [CacheAspect]
         [PerformanceAspect(1)]
         public IDataResult<List<User>> GetAll()
@@ -200,19 +172,11 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<User>(_userDal.Get(p=>p.Email==email));
         }
-
-        [PerformanceAspect(1)]
-        public IDataResult<List<OperationClaim>> GetClaimsUserId(int userId)
-        {
-            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaimsUserId(userId));          
-        }
-
         [PerformanceAspect(1)]
         public IDataResult<List<OperationClaim>> GetClaims(User user)
         {
             return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
         }
-
 
         [PerformanceAspect(1)]
         public IDataResult<UserDetailDto> GetUserDetail(int userId)
@@ -234,7 +198,7 @@ namespace Business.Concrete
 
         private IResult CheckIfUserCanChangeStatus(int userId, UserForUpdateDto userForUpdateDto)
         {
-            var userClaims = _userDal.GetClaimsUserId(userId);
+            var userClaims = _uocService.GetClaimsUserId(userId).Data;
             var existingUser = _userDal.Get(p => p.Id == userId);
             var isAdmin = userClaims.Any(c => c.OperationClaimName == "Admin");
 
@@ -248,7 +212,7 @@ namespace Business.Concrete
 
         private IResult CheckIfUserCanUpdate(int currentUserId, int userToUpdateId)
         {
-            var userClaims = _userDal.GetClaimsUserId(currentUserId);
+            var userClaims = _uocService.GetClaimsUserId(currentUserId).Data;
             var isAdmin = userClaims.Any(c => c.OperationClaimName == "Admin");
 
             if (!isAdmin)
@@ -256,8 +220,7 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.CheckIfUserIsAdmin);
             }
 
-            var userToUpdateClaims = _userDal.GetClaimsUserId(userToUpdateId);
-            var isUserToUpdateAdmin = userToUpdateClaims.Any(c => c.OperationClaimName == "Admin");
+            var isUserToUpdateAdmin = userClaims.Any(c => c.OperationClaimName == "Admin");
 
             if (isUserToUpdateAdmin)
             {

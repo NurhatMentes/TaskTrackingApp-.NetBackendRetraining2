@@ -44,6 +44,12 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<NotificationManager>().As<INotificationService>();
             builder.RegisterType<EfNotificationDal>().As<INotificationDal>();
 
+            builder.RegisterType<UserOperationClaimManager>().As<IUserOperationClaimService>();
+            builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>();
+
+            builder.RegisterType<OperationClaimManager>().As<IOperationClaimService>();
+            builder.RegisterType<EfOperationClaimDal>().As<IOperationClaimDal>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

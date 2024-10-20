@@ -22,7 +22,18 @@
         public static string AdminCannotUpdateOtherAdmins = "Güncellenecek kullanıcı, Yönetici olamaz.";
 
         //UserOperaitonClaim
-        public static string UserClaimUpdated = "Kullanıcı yetkisi güncellendi.";
+        public static string UserClaimUpdated = "Kullanıcının yetkisi güncellendi.";
+        public static string UserAlreadyHasThisClaim = "Kullanıcı bu yetkiye zaten sahip.";
+        public static string UserIdIsRequired = "Kullanıcı Id alanı boş olamaz.";
+        public static string OperationClaimIdIsRequired = "Yetki Id alanı boş olamaz.";
+
+        //OperationClaim
+        public static string OperationClaimUpdated = "Yetki güncellendi.";
+        public static string OperationClaimAdded = "Yetki eklendi.";
+        public static string OperationClaimDeleted = "Yetki silindi.";
+        public static string OperationClaimNotFound = "Yetki bulunamadı.";
+        public static string OperationClaimAlreadyExists = "Bu yetki adı zaten mevcut.";
+
 
         //Project
         public static string ProjectAdded = "Proje başarıyla eklendi.";

@@ -1,7 +1,9 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.DTOs;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -37,6 +39,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<UserOperationClaimDto>>(_dal.GetClaimsUserId(userId));
         }
 
+        [ValidationAspect(typeof(UserOperationClaimValidator))]
         [SecuredOperation("Admin")]
         public IResult Update(int userId, int operationClaimId)
         {

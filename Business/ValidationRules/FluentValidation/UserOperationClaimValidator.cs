@@ -8,6 +8,9 @@ namespace Business.ValidationRules.FluentValidation
     public class UserOperationClaimValidator : AbstractValidator<UserOperationClaim>
     {
         private readonly IUserOperationClaimDal _userOperationClaimDal;
+        public UserOperationClaimValidator() : this(null)
+        {
+        }
 
         public UserOperationClaimValidator(IUserOperationClaimDal userOperationClaimDal)
         {
@@ -28,6 +31,8 @@ namespace Business.ValidationRules.FluentValidation
 
         private bool NotHaveDuplicateOperationClaim(UserOperationClaim userOperationClaim)
         {
+            if (_userOperationClaimDal == null)
+                return true;
             var existingClaim = _userOperationClaimDal.Get(u =>
                 u.UserId == userOperationClaim.UserId &&
                 u.OperationClaimId == userOperationClaim.OperationClaimId);
